@@ -1,4 +1,4 @@
-# Finance Auth — Módulo de Autenticación
+# Gestion Financiera — Módulo de Autenticación
 > Tecnología: Spring Boot 3.2 · Java 17 · Arquitectura Hexagonal
 
 ---
