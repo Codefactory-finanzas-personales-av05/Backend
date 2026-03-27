@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 /*
- * Adaptador de SALIDA (Driven Adapter) para usuarios.
- * Implementa el puerto de salida usando Spring Data JPA.
- * Si manana cambiamos a MongoDB, solo cambiamos este archivo.
+ * Adaptador de SALIDA para usuarios.
  */
 @Component
 @RequiredArgsConstructor

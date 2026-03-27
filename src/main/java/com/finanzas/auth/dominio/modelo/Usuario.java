@@ -5,8 +5,7 @@ import java.time.LocalDateTime;
 
 /*
  * Este es el modelo de dominio del Usuario.
- * No tiene ninguna anotacion de JPA ni de Spring, eso va en la capa de infraestructura.
- * Aprendimos que en arquitectura hexagonal el dominio debe ser independiente de todo lo externo.
+ * 
  */
 @Getter
 @Setter
@@ -17,7 +16,7 @@ public class Usuario {
 
     private Long id;
     private String correo;
-    private String contrasena;  // siempre llega hasheada con BCrypt
+    private String contrasena; 
 
     // Relacion con Cliente - cada usuario tiene un perfil de cliente
     private Long idCliente;

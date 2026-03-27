@@ -3,11 +3,7 @@ package com.finanzas.auth.aplicacion.dto.respuesta;
 import lombok.Builder;
 import lombok.Data;
 
-/*
- * Envoltorio generico para todas las respuestas de la API.
- * Siempre devuelve: status, mensaje y data (el contenido real).
- * Asi el frontend siempre recibe el mismo formato sin importar el endpoint.
- */
+
 @Data
 @Builder
 public class RespuestaApi<T> {

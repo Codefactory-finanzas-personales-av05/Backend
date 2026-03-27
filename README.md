@@ -500,15 +500,9 @@ Cliente                             Servidor                        Base de dato
 
 ### Pasos
 
-```bash
-# 1. Clonar o descomprimir el proyecto
-cd banco2026
-
-# 2. Compilar y ejecutar
-./mvnw spring-boot:run
-
-# En Windows:
+# Compilar y ejecutar
 mvnw.cmd spring-boot:run
+
 ```
 
 Si todo está bien, verás en la consola:
@@ -568,23 +562,7 @@ H2 es una base de datos que vive en memoria mientras el proyecto está corriendo
 | User Name | `sa` |
 | Password | *(vacío)* |
 
-**Consultas útiles:**
 
-```sql
--- Ver todos los usuarios registrados
-SELECT * FROM USUARIOS;
-
--- Ver el código de verificación generado
-SELECT * FROM CODIGOS_VERIFICACION;
-
--- Ver los clientes
-SELECT * FROM CLIENTES;
-
--- Ver usuario con su cliente
-SELECT u.ID_USUARIO, u.CORREO, u.ESTADO, u.CORREO_VERIFICADO,
-       c.ID_CLIENTE, c.NOMBRE, c.DESCRIPCION
-FROM USUARIOS u
-JOIN CLIENTES c ON u.ID_CLIENTE = c.ID_CLIENTE;
 ```
 
 ---

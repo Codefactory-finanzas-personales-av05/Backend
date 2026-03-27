@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 
 /*
  * Entidad JPA del usuario.
- * Esta separada del modelo de dominio a proposito: si manana
- * cambiamos de base de datos, el dominio no se toca.
  */
 @Entity
 @Table(

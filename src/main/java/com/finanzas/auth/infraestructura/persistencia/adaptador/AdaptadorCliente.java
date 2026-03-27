@@ -11,7 +11,6 @@ import java.util.Optional;
 
 /*
  * Adaptador de SALIDA para clientes.
- * Implementa el puerto usando Spring Data JPA.
  */
 @Component
 @RequiredArgsConstructor
@@ -31,7 +30,7 @@ public class AdaptadorCliente implements PuertoRepositorioCliente {
         return repositorioJpa.findById(idCliente).map(this::aDominio);
     }
 
-    // Convierte de entidad JPA a modelo de dominio
+  
     private Cliente aDominio(EntidadCliente entidad) {
         if (entidad == null) return null;
         return Cliente.builder()
@@ -42,7 +41,7 @@ public class AdaptadorCliente implements PuertoRepositorioCliente {
                 .build();
     }
 
-    // Convierte de modelo de dominio a entidad JPA
+    
     private EntidadCliente aEntidad(Cliente cliente) {
         if (cliente == null) return null;
         return EntidadCliente.builder()

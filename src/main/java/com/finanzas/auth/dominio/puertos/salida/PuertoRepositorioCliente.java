@@ -5,7 +5,7 @@ import java.util.Optional;
 
 /*
  * Puerto de SALIDA para el repositorio de clientes.
- * El dominio define lo que necesita, la implementacion JPA va en infraestructura.
+ * 
  */
 public interface PuertoRepositorioCliente {
 

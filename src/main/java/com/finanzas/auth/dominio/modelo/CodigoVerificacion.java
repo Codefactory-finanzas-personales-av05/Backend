@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 /*
  * Modelo de dominio para los codigos de verificacion que se envian al correo.
- * Tambien sin anotaciones de JPA, igual que Usuario.
+ * 
  */
 @Getter
 @Setter

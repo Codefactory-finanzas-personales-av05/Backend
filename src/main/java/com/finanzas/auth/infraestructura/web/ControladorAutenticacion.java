@@ -17,10 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/*
- * Adaptador de ENTRADA - traduce requests HTTP a llamadas al caso de uso.
- * Solo conoce la interfaz CasoDeUsoAutenticacion, no la implementacion.
- */
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor

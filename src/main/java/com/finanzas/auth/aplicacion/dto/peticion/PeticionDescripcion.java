@@ -5,7 +5,7 @@ import lombok.Data;
 
 /*
  * DTO para el endpoint que guarda la descripcion del cliente.
- * Recibe las credenciales para autenticar + la descripcion a guardar.
+ * Recibe las credenciales para autenticar mas la descripcion a guardar.
  */
 @Data
 public class PeticionDescripcion {

@@ -23,7 +23,7 @@ public class AdaptadorCodigo implements PuertoRepositorioCodigo {
 
     @Override
     public CodigoVerificacion guardar(CodigoVerificacion codigo) {
-        // Necesitamos la entidad usuario para la relacion JPA
+        
         EntidadUsuario entidadUsuario = repositorioJpaUsuario
                 .findById(codigo.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + codigo.getUsuarioId()));

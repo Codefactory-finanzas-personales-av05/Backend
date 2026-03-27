@@ -9,12 +9,9 @@ import com.finanzas.auth.aplicacion.dto.respuesta.RespuestaRegistro;
 import com.finanzas.auth.aplicacion.dto.respuesta.RespuestaCliente;
 
 /*
- * Puerto de ENTRADA (driving port).
+ * 
  * Define los casos de uso que expone el dominio hacia afuera.
- * El controlador solo conoce esta interfaz, no sabe quien la implementa.
  *
- * En la arquitectura hexagonal los puertos de entrada son como
- * el "menu" de lo que puede hacer la aplicacion.
  */
 public interface CasoDeUsoAutenticacion {
 

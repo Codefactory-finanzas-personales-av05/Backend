@@ -50,9 +50,9 @@ public class ServicioAutenticacion implements CasoDeUsoAutenticacion {
     @Value("${app.jwt.expiration-ms:86400000}")
     private long expiracionJwtMs;
 
-    // -------------------------------------------------------------------------
+    // 
     // CASO DE USO 1: Registrar usuario - devuelve 200
-    // -------------------------------------------------------------------------
+    // 
     @Override
     @Transactional
     public RespuestaRegistro registrar(PeticionRegistro peticion) {
@@ -92,10 +92,10 @@ public class ServicioAutenticacion implements CasoDeUsoAutenticacion {
                 .build();
     }
 
-    // -------------------------------------------------------------------------
+    // 
     // CASO DE USO 2: Verificar correo con el codigo
     // Correcto: 201 | Incorrecto: 401
-    // -------------------------------------------------------------------------
+    // 
     @Override
     @Transactional
     public void verificarCorreo(PeticionVerificacion peticion) {
@@ -130,10 +130,10 @@ public class ServicioAutenticacion implements CasoDeUsoAutenticacion {
         log.info("Cuenta activada para usuario ID: {}", usuario.getId());
     }
 
-    // -------------------------------------------------------------------------
+    // 
     // CASO DE USO 3: Login con correo y contrasena
     // Correcto: 200 con datos del cliente | Incorrecto: 400
-    // -------------------------------------------------------------------------
+    // 
     @Override
     @Transactional(readOnly = true)
     public RespuestaLogin iniciarSesion(PeticionLogin peticion) {
@@ -186,10 +186,10 @@ public class ServicioAutenticacion implements CasoDeUsoAutenticacion {
                 .build();
     }
 
-    // -------------------------------------------------------------------------
+    // 
     // CASO DE USO 4: Guardar descripcion del cliente
     // Credenciales incorrectas: 401 | Correctas: 200 con datos del cliente
-    // -------------------------------------------------------------------------
+    // 
     @Override
     @Transactional
     public RespuestaCliente guardarDescripcion(PeticionDescripcion peticion) {
@@ -226,9 +226,9 @@ public class ServicioAutenticacion implements CasoDeUsoAutenticacion {
                 .build();
     }
 
-    // -------------------------------------------------------------------------
+    // 
     // CASO DE USO EXTRA: Reenviar codigo
-    // -------------------------------------------------------------------------
+    // 
     @Override
     @Transactional
     public void reenviarCodigo(String correo) {
@@ -242,9 +242,9 @@ public class ServicioAutenticacion implements CasoDeUsoAutenticacion {
         log.info("Codigo reenviado a: {}", correo);
     }
 
-    // -------------------------------------------------------------------------
+    // 
     // Metodos privados de ayuda
-    // -------------------------------------------------------------------------
+    // 
 
     private void generarYEnviarCodigo(Usuario usuario) {
         repositorioCodigo.invalidarCodigosAnteriores(

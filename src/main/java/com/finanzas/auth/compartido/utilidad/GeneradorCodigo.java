@@ -4,8 +4,6 @@ import java.security.SecureRandom;
 
 /*
  * Utilidad para generar codigos de verificacion numericos.
- * Usamos SecureRandom en vez de Random porque es mas seguro
- * para codigos que van a correos de usuarios reales.
  */
 public final class GeneradorCodigo {
 

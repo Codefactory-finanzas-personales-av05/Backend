@@ -4,7 +4,7 @@ import com.finanzas.auth.dominio.modelo.CodigoVerificacion;
 import com.finanzas.auth.infraestructura.persistencia.entidad.EntidadCodigoVerificacion;
 import com.finanzas.auth.infraestructura.persistencia.entidad.EntidadUsuario;
 
-// Convierte codigos de verificacion entre dominio y entidad JPA
+
 public class ConvertidorCodigo {
 
     // De entidad JPA -> modelo de dominio

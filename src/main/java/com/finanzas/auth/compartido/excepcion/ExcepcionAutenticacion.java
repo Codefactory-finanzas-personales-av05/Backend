@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 /*
- * Excepcion personalizada para errores de autenticacion.
+ * Excepcion para errores de autenticacion.
  * Cargamos el HttpStatus para que el manejador global sepa
  * que codigo de respuesta devolver.
  */

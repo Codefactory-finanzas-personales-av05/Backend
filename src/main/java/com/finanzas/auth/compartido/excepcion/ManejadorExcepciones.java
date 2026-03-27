@@ -13,15 +13,14 @@ import java.util.Map;
 
 /*
  * Manejador global de excepciones.
- * Centraliza todos los errores para que el controlador quede limpio.
- * Cualquier excepcion no manejada pasa por aqui antes de llegar al cliente.
+    * Captura las excepciones lanzadas en cualquier parte de la aplicacion
  */
 @RestControllerAdvice
 @Slf4j
 public class ManejadorExcepciones {
 
     /*
-     * Errores de validacion (@Valid en los DTOs).
+     * Errores de validacion 
      * Por ejemplo: correo mal formado, contrasena muy corta, etc.
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)

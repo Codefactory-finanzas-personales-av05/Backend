@@ -6,8 +6,6 @@ import org.springframework.stereotype.Component;
 
 /*
  * Adaptador de SALIDA para el correo electronico.
- * Por ahora solo imprime en consola porque no tenemos servidor SMTP.
- * Cuando tengamos el servidor real, solo cambiamos este archivo.
  */
 @Component
 @Slf4j
