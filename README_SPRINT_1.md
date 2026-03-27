@@ -563,6 +563,51 @@ H2 es una base de datos que vive en memoria mientras el proyecto está corriendo
 | Password | *(vacío)* |
 
 
+
+## Pruebas unitarias
+
+El proyecto tiene cobertura estimada del **80%** distribuida en 4 archivos de prueba.
+
+### Ejecutar las pruebas
+```bash
+# Correr todas las pruebas
+mvn test
+
+# Correr pruebas y generar reporte de cobertura
+mvn test jacoco:report
+```
+
+El reporte de cobertura queda en `target/site/jacoco/index.html`. Ábrelo en el navegador para ver el detalle por clase.
+
+### Archivos de prueba y qué cubren
+
+| Archivo | Tipo | Pruebas | Qué cubre |
+|---|---|---|---|
+| `PruebasAutenticacion` | Integración | 3 | Flujo de registro y login con H2 real |
+| `PruebasServicioAutenticacion` | Unitaria | 13 | Todos los casos de uso con mocks (Mockito) |
+| `PruebasCodigoVerificacion` | Unitaria | 7 | Regla de negocio `estaVigente()` del dominio |
+| `PruebasUtilJwt` | Unitaria | 6 | Generación y validación de tokens JWT |
+| `PruebasGeneradorCodigo` | Unitaria | 4 | Generador de códigos de 6 dígitos |
+
+### Diferencia entre pruebas de integración y unitarias
+
+Las **pruebas unitarias** (`@ExtendWith(MockitoExtension.class)`) usan Mockito para simular los puertos de salida. No necesitan base de datos ni Spring. Son rápidas y prueban la lógica de forma aislada.
+
+Las **pruebas de integración** (`@SpringBootTest`) levantan el contexto completo de Spring Boot con H2 en memoria. Son más lentas pero prueban el flujo de punta a punta.
+
+### Casos probados en PruebasServicioAutenticacion
+
+**Registro:** registro exitoso crea usuario y cliente, correo duplicado lanza CONFLICT, contraseña se hashea antes de guardar.
+
+**Verificación:** código correcto activa la cuenta, código incorrecto lanza UNAUTHORIZED, código expirado lanza UNAUTHORIZED, correo ya verificado lanza BAD_REQUEST.
+
+**Login:** login exitoso devuelve JWT y datos del cliente, correo inexistente lanza BAD_REQUEST, contraseña incorrecta lanza BAD_REQUEST, sin verificar lanza UNAUTHORIZED, cuenta bloqueada lanza UNAUTHORIZED.
+
+**Descripción:** credenciales correctas actualiza el cliente, credenciales incorrectas lanza UNAUTHORIZED, correo inexistente lanza UNAUTHORIZED.
+
+**Reenvío:** usuario pendiente genera nuevo código, correo ya verificado lanza BAD_REQUEST.
+
+
 ```
 
 ---
