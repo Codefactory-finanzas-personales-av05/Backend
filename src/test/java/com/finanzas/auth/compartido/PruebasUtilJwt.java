@@ -7,11 +7,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.springframework.test.context.ActiveProfiles;
+
 /*
  * Pruebas del UtilJwt.
  * Usamos @SpringBootTest para que Spring inyecte el secreto desde application.yml.
  */
 @SpringBootTest
+@ActiveProfiles("test")
 @DisplayName("Pruebas del UtilJwt")
 class PruebasUtilJwt {
 
@@ -53,7 +56,7 @@ class PruebasUtilJwt {
 
     @Test
     @DisplayName("Extraer correo del token debe devolver el correo original")
-    void extraerCorreo_debeDevolver elCorreoOriginal() {
+    void extraerCorreo_debeDevolverelCorreoOriginal() {
         String correoOriginal = "usuario@test.com";
         String token = utilJwt.generarToken(correoOriginal, 1L);
 

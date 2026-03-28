@@ -1,0 +1,35 @@
+spring:
+  # Forzar H2 en memoria para todas las pruebas de integracion.
+  # Este archivo sobreescribe application.yml cuando el perfil "test" esta activo.
+  # Asi las pruebas siempre usan H2 sin importar si produccion usa PostgreSQL.
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
+
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: false  # No necesitamos la consola en pruebas
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # Crea tablas al iniciar el test, las borra al terminar
+    show-sql: false           # En pruebas no necesitamos ver el SQL
+    database-platform: org.hibernate.dialect.H2Dialect
+
+# Configuracion minima de JWT para las pruebas
+app:
+  jwt:
+    secret: ClaveSecretaParaPruebasUnitariasNoUsarEnProduccion!
+    expiration-ms: 86400000
+    refresh-expiration-ms: 604800000
+
+  verificacion:
+    minutos-expiracion: 15
+    longitud-codigo: 6
+
+  frontend-url: http://localhost:3000
