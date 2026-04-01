@@ -1,3 +1,4 @@
+
 # Gestión Financiera — Documentación del Proyecto
 
 > **Tecnología:** Spring Boot 3.2 · Java 17 · Arquitectura Hexagonal · PostgreSQL  
@@ -35,7 +36,8 @@
 13. [Migración a PostgreSQL (producción)](#13-migración-a-postgresql-producción)
 14. [Pruebas unitarias](#14-pruebas-unitarias)
 15. [Variables de configuración](#15-variables-de-configuración)
-16. [Decisiones de diseño](#16-decisiones-de-diseño)
+16. [Integración con n8n (Envío de Correos)](#16-integración-con-n8n-envío-de-correos)
+17. [Decisiones de diseño](#17-decisiones-de-diseño)
 
 ---
 
@@ -43,10 +45,9 @@
 
 El Sprint 1 implementa el módulo completo de autenticación para la aplicación de gestión financiera. Cubre el registro de usuarios, verificación de correo electrónico mediante código de 6 dígitos (2FA), inicio de sesión con JWT y actualización del perfil del cliente.
 
-El proyecto fue desarrollado aplicando **Arquitectura Hexagonal (Ports and Adapters)** 
-
-**Base de datos en desarrollo:** H2 en memoria (no requiere instalación).  
+El proyecto fue desarrollado aplicando **Arquitectura Hexagonal (Ports and Adapters)** **Base de datos en desarrollo:** H2 en memoria (no requiere instalación).  
 **Base de datos en producción:** PostgreSQL 14+.
+**Orquestación de correos:** n8n.
 
 ---
 
@@ -91,7 +92,7 @@ La arquitectura hexagonal, propuesta por Alistair Cockburn, organiza el sistema 
 |---|---|---|
 | **Dominio** | `dominio/` | Modelos puros (`Usuario`, `Cliente`, `CodigoVerificacion`) y definición de puertos. Sin anotaciones de Spring ni JPA. |
 | **Aplicación** | `aplicacion/` | Implementa los casos de uso (`ServicioAutenticacion`) y contiene los DTOs. |
-| **Infraestructura** | `infraestructura/` | Adaptadores externos: controladores HTTP, entidades JPA, repositorios, correo, seguridad. |
+| **Infraestructura** | `infraestructura/` | Adaptadores externos: controladores HTTP, entidades JPA, repositorios, webhooks (n8n), seguridad. |
 | **Compartido** | `compartido/` | Utilidades transversales: manejo de excepciones, JWT, generador de códigos. |
 
 #### Flujo de puertos y adaptadores
@@ -118,10 +119,10 @@ La arquitectura hexagonal, propuesta por Alistair Cockburn, organiza el sistema 
         │           └── [AdaptadorCodigo + JPA]
         │
         └──► [PuertoCorreo]
-                    └── [AdaptadorCorreo]  ← (simula envío en consola)
+                    └── [AdaptadorN8n]    ← (Llamada HTTP a Webhook)
 ```
 
-**Ventaja clave:** si mañana cambiamos de PostgreSQL a otro motor, solo se toca la capa de infraestructura. El dominio y los casos de uso no se modifican.
+**Ventaja clave:** si mañana cambiamos de PostgreSQL a otro motor, o de n8n a AWS SES, solo se toca la capa de infraestructura. El dominio y los casos de uso no se modifican.
 
 ---
 
@@ -133,7 +134,7 @@ banco2026/
 └── src/
     ├── main/
     │   ├── resources/
-    │   │   └── application.yml                      ← Config general (H2 dev / PostgreSQL prod)
+    │   │   └── application.yml                      ← Config general (H2 dev / PostgreSQL prod / webhooks)
     │   └── java/com/finanzas/auth/
     │       ├── FinanceAuthApplication.java           ← Punto de entrada
     │       │
@@ -185,11 +186,11 @@ banco2026/
     │       │   │       ├── ConvertidorUsuario.java   ← Convierte dominio ↔ entidad JPA
     │       │   │       └── ConvertidorCodigo.java
     │       │   ├── correo/
-    │       │   │   └── AdaptadorCorreo.java          ← Implementa PuertoCorreo (simula en consola)
+    │       │   │   └── AdaptadorN8n.java             ← Implementa PuertoCorreo (Petición HTTP a webhook)
     │       │   ├── seguridad/
     │       │   │   └── ConfiguracionSeguridad.java   ← Spring Security + BCrypt
     │       │   └── configuracion/
-    │       │       └── ConfiguracionApp.java         ← CORS
+    │       │       └── ConfiguracionApp.java         ← CORS y RestTemplate
     │       │
     │       └── compartido/                           ← Utilidades compartidas
     │           ├── excepcion/
@@ -298,7 +299,7 @@ Todos los endpoints reciben y devuelven `Content-Type: application/json`.
 
 ### POST `/registro`
 
-Registra un nuevo usuario, crea su perfil de cliente y envía el código de verificación (impreso en los logs).
+Registra un nuevo usuario, crea su perfil de cliente y envía el código de verificación al correo a través del flujo de n8n.
 
 **Request:**
 ```json
@@ -338,7 +339,7 @@ Registra un nuevo usuario, crea su perfil de cliente y envía el código de veri
 
 ### POST `/verificar`
 
-Valida el código de 6 dígitos enviado al correo. En desarrollo, el código aparece en los logs de Spring Boot.
+Valida el código de 6 dígitos enviado al correo del usuario.
 
 **Request:**
 ```json
@@ -458,7 +459,7 @@ Recibe las credenciales del usuario y guarda la descripción en su perfil de cli
 
 ### POST `/reenviar-codigo?correo=usuario@ejemplo.com`
 
-Reenvía el código si expiró o no llegó. El correo va como **query param**, no en el body.
+Reenvía el código si expiró o no llegó, activando nuevamente el webhook de n8n. El correo va como **query param**, no en el body.
 
 **Response 200 OK:**
 ```json
@@ -476,27 +477,27 @@ Reenvía el código si expiró o no llegó. El correo va como **query param**, n
 ### Historia 1 — Registro y verificación
 
 ```
-Cliente (Postman/Frontend)          Servidor                        Base de datos
+Cliente (Postman/Frontend)          Servidor                        Base de datos / n8n
         │                               │                                │
         │── POST /registro ────────────►│                                │
-        │   {correo, contrasena}        │── ¿existe el correo? ─────────►│
+        │   {correo, contrasena}        │── ¿existe el correo? ─────────►│ (BD)
         │                               │◄── No ────────────────────────│
-        │                               │── Crear Cliente vacío ────────►│
-        │                               │── Crear Usuario ──────────────►│
+        │                               │── Crear Cliente vacío ────────►│ (BD)
+        │                               │── Crear Usuario ──────────────►│ (BD)
         │                               │── Generar código 6 dígitos     │
-        │                               │── Guardar código ─────────────►│
-        │                               │── Imprimir código en logs       │
+        │                               │── Guardar código ─────────────►│ (BD)
+        │                               │── Enviar Webhook a n8n ───────►│ (n8n)
         │◄── 200 {id, correo} ─────────│                                │
         │                               │                                │
-        │   [buscar el código en los    │                                │
-        │    logs de Spring Boot]       │                                │
+        │   [revisar la bandeja de      │                                │
+        │    entrada del correo]        │                                │
         │                               │                                │
         │── POST /verificar ───────────►│                                │
-        │   {correo, codigo}            │── Buscar código activo ───────►│
+        │   {correo, codigo}            │── Buscar código activo ───────►│ (BD)
         │                               │◄── Código encontrado ──────────│
         │                               │── ¿estaVigente()? (15 min)     │
-        │                               │── Marcar código como usado ───►│
-        │                               │── Activar cuenta (ACTIVO) ────►│
+        │                               │── Marcar código como usado ───►│ (BD)
+        │                               │── Activar cuenta (ACTIVO) ────►│ (BD)
         │◄── 201 ──────────────────────│                                │
 ```
 
@@ -555,7 +556,7 @@ Cliente                             Servidor                        Base de dato
 | Spring Boot | 3.2.3 | Framework base |
 | Spring Security | 6.2 | Control de acceso, BCrypt |
 | Spring Data JPA | 3.2 | Acceso a base de datos sin SQL manual |
-| Spring Validation | 3.2 | Validación de DTOs (`@Valid`, `@Email`, `@Pattern`) |
+| n8n | — | Orquestador de flujos para envío de correos (Webhook) |
 | H2 Database | — | BD en memoria para desarrollo y pruebas |
 | PostgreSQL | 14+ | BD para producción |
 | JJWT | 0.11.5 | Generación y validación de tokens JWT |
@@ -622,7 +623,7 @@ if (json.data && json.data.accessToken) {
 
 ```
 1. POST {{base_url}}/api/auth/registro
-2. Buscar el código en los logs de Spring Boot (buscar "CODIGO:")
+2. Revisar el correo electrónico para obtener el código (vía n8n)
 3. POST {{base_url}}/api/auth/verificar
 4. POST {{base_url}}/api/auth/login         ← el token se guarda automáticamente
 5. POST {{base_url}}/api/auth/descripcion
@@ -699,14 +700,12 @@ spring:
 Descomentar el driver de PostgreSQL (el de H2 permanece en `scope: test` para que las pruebas sigan funcionando):
 
 ```xml
-<!-- Descomentar para producción: -->
 <dependency>
     <groupId>org.postgresql</groupId>
     <artifactId>postgresql</artifactId>
     <scope>runtime</scope>
 </dependency>
 
-<!-- H2 se mantiene siempre en scope test — NO tocar: -->
 <dependency>
     <groupId>com.h2database</groupId>
     <artifactId>h2</artifactId>
@@ -811,13 +810,37 @@ Todas las variables están en `src/main/resources/application.yml`:
 | `app.jwt.secret` | `MiClaveSecreta...` | Clave para firmar los JWT — cambiar en producción |
 | `app.jwt.expiration-ms` | `86400000` | Expiración del JWT (24 horas en ms) |
 | `app.verificacion.minutos-expiracion` | `15` | Minutos antes de que el código de verificación expire |
+| `app.n8n.webhook-url` | `http://localhost:5678/webhook/correo` | URL del Webhook de n8n para envío de correos |
 | `app.frontend-url` | `http://localhost:3000` | URL del frontend (usada en CORS) |
 
 ---
 
-## 16. Decisiones de diseño
+## 16. Integración con n8n (Envío de Correos)
+
+El envío de correos electrónicos (códigos de verificación) está desacoplado del backend mediante la plataforma de automatización **n8n**. 
+
+Cuando se registra un usuario o se solicita un reenvío, el adaptador de infraestructura del backend realiza una petición HTTP `POST` al Webhook de n8n.
+
+### Payload enviado a n8n
+El backend envía la siguiente estructura JSON en el cuerpo de la petición:
+
+```json
+{
+  "email": "usuario@ejemplo.com",
+  "codigo": "123456",
+  "asunto": "Tu código de verificación",
+  "tipo": "VERIFICACION_CORREO"
+}
+```
+*n8n recibe este payload, formatea el correo (mediante un nodo de HTML/Template) y lo despacha utilizando un nodo de SMTP (como Gmail, SendGrid, etc).*
+
+---
+
+## 17. Decisiones de diseño
 
 **¿Por qué el dominio no tiene anotaciones JPA?** En arquitectura hexagonal el dominio debe ser independiente de cualquier framework. Por eso existen `Usuario.java` (dominio puro) y `EntidadUsuario.java` (con JPA en infraestructura). Los convertidores se encargan de traducir entre ambos.
+
+**¿Por qué desacoplar el correo con n8n?** Permite cambiar el proveedor de correo, diseñar plantillas visuales o agregar lógica condicional (ej. alertas de fallos) directamente en el flujo visual de n8n sin tener que recompilar o modificar el código del backend en Java.
 
 **¿Por qué BCrypt con factor 12?** Es el estándar recomendado para hashear contraseñas. Factor 12 ofrece un buen balance entre seguridad y velocidad de procesamiento.
 
@@ -847,4 +870,5 @@ Todas las variables están en `src/main/resources/application.yml`:
 
 ---
 
-*Documentación del proyecto — Fabrica escuela 20
+*Documentación del proyecto — Fabrica escuela 20*
+```

@@ -1,8 +1,4 @@
 spring:
-  # Desactivamos el correo real porque todavia no tenemos servidor SMTP
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
-
   # ============================================================
   # BASE DE DATOS - MODO DESARROLLO (H2 en memoria)
   # Para cambiar a PostgreSQL, comentar este bloque
@@ -31,7 +27,7 @@ spring:
   # ============================================================
   # BASE DE DATOS - PRODUCCION (PostgreSQL)
   # Cuando tengan la BD lista, comentar el bloque H2 de arriba
-  # y descomentar esto. Pedir al compañero de BD los datos.
+  # y descomentar esto.
   # ============================================================
   # datasource:
   #   url: jdbc:postgresql://localhost:5432/finanzas_db
@@ -60,6 +56,14 @@ app:
     longitud-codigo: 6
 
   frontend-url: http://localhost:3000
+
+  # ============================================================
+  # CONFIGURACION n8n - Webhooks para envio de correos
+  # Reemplazar las URLs con las de tu instancia en n8n.cloud
+  # ============================================================
+  n8n:
+    webhook-verificacion: https://djpa.app.n8n.cloud/webhook/verificacion-correo
+    webhook-bienvenida: https://djpa.app.n8n.cloud/webhook/Bienvenida Correo
 
 server:
   port: 8080

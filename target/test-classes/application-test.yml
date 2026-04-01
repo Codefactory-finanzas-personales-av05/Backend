@@ -1,7 +1,7 @@
 spring:
   # Forzar H2 en memoria para todas las pruebas de integracion.
-  # Este archivo sobreescribe application.yml cuando el perfil "test" esta activo.
-  # Asi las pruebas siempre usan H2 sin importar si produccion usa PostgreSQL.
+  # El exclude de mail se mantiene aqui porque en las pruebas
+  # no necesitamos llamar a n8n real.
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
 
@@ -13,15 +13,14 @@ spring:
 
   h2:
     console:
-      enabled: false  # No necesitamos la consola en pruebas
+      enabled: false
 
   jpa:
     hibernate:
-      ddl-auto: create-drop  # Crea tablas al iniciar el test, las borra al terminar
-    show-sql: false           # En pruebas no necesitamos ver el SQL
+      ddl-auto: create-drop
+    show-sql: false
     database-platform: org.hibernate.dialect.H2Dialect
 
-# Configuracion minima de JWT para las pruebas
 app:
   jwt:
     secret: ClaveSecretaParaPruebasUnitariasNoUsarEnProduccion!
@@ -33,3 +32,10 @@ app:
     longitud-codigo: 6
 
   frontend-url: http://localhost:3000
+
+  # En pruebas los webhooks apuntan a localhost que no existe
+  # Si n8n no responde, AdaptadorCorreo captura el error y continua
+  # El codigo siempre aparece en los logs como respaldo
+  n8n:
+    webhook-verificacion: http://localhost:5678/webhook-test/verificacion-correo
+    webhook-bienvenida: http://localhost:5678/webhook-test/bienvenida-correo

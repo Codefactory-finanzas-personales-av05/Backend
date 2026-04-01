@@ -2,8 +2,8 @@ com/finanzas/auth/infraestructura/configuracion/ConfiguracionApp$1.class
 com/finanzas/auth/compartido/excepcion/ManejadorExcepciones.class
 com/finanzas/auth/dominio/modelo/CodigoVerificacion.class
 com/finanzas/auth/dominio/modelo/Cliente$ClienteBuilder.class
-com/finanzas/auth/aplicacion/dto/respuesta/RespuestaRegistro$RespuestaRegistroBuilder.class
 com/finanzas/auth/aplicacion/casosdeuso/ServicioAutenticacion.class
+com/finanzas/auth/aplicacion/dto/respuesta/RespuestaRegistro$RespuestaRegistroBuilder.class
 com/finanzas/auth/FinanceAuthApplication.class
 com/finanzas/auth/infraestructura/correo/AdaptadorCorreo.class
 com/finanzas/auth/dominio/puertos/entrada/CasoDeUsoAutenticacion.class
@@ -25,8 +25,8 @@ com/finanzas/auth/aplicacion/dto/peticion/PeticionRegistro.class
 com/finanzas/auth/dominio/modelo/Usuario$UsuarioBuilder.class
 com/finanzas/auth/aplicacion/dto/respuesta/RespuestaCliente.class
 com/finanzas/auth/aplicacion/dto/respuesta/RespuestaCliente$RespuestaClienteBuilder.class
-com/finanzas/auth/infraestructura/persistencia/repositorio/RepositorioJpaCliente.class
 com/finanzas/auth/infraestructura/persistencia/adaptador/AdaptadorUsuario.class
+com/finanzas/auth/infraestructura/persistencia/repositorio/RepositorioJpaCliente.class
 com/finanzas/auth/infraestructura/persistencia/entidad/EntidadUsuario.class
 com/finanzas/auth/aplicacion/dto/respuesta/RespuestaLogin$RespuestaLoginBuilder.class
 com/finanzas/auth/infraestructura/web/ControladorAutenticacion.class
