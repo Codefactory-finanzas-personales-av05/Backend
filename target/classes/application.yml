@@ -1,74 +1,61 @@
 spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
+
   # ============================================================
-  # BASE DE DATOS - MODO DESARROLLO (H2 en memoria)
-  # Para cambiar a PostgreSQL, comentar este bloque
-  # y descomentar el bloque de PostgreSQL de abajo
+  # BASE DE DATOS — SUPABASE (produccion)
   # ============================================================
   datasource:
-    url: jdbc:h2:mem:finanzasdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    url: jdbc:postgresql://aws-1-us-west-2.pooler.supabase.com:6543/postgres?user=postgres.wfgbepodmukcfupozmaa&password=KWiif9Ah_j/Tth5
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
-  # ============================================================
-  # BASE DE DATOS - PRODUCCION (PostgreSQL)
-  # Cuando tengan la BD lista, comentar el bloque H2 de arriba
-  # y descomentar esto.
-  # ============================================================
-  # datasource:
-  #   url: jdbc:postgresql://localhost:5432/finanzas_db
-  #   driver-class-name: org.postgresql.Driver
-  #   username: postgres
-  #   password: tu_password
-  #
-  # jpa:
-  #   hibernate:
-  #     ddl-auto: update
-  #   show-sql: true
-  #   properties:
-  #     hibernate:
-  #       format_sql: true
-  #   database-platform: org.hibernate.dialect.PostgreSQLDialect
+  mail:
+    host: localhost
+    port: 25
+    properties:
+      mail:
+        smtp:
+          auth: false
 
-# Configuracion del JWT y codigos de verificacion
+# ============================================================
+# CONFIGURACION DE LA APLICACION
+# ============================================================
 app:
   jwt:
-    secret: MiClaveSecretaSuperSeguraParaFinanzasPersonales2024!
-    expiration-ms: 86400000        # 24 horas en milisegundos
+    secret: ${JWT_SECRET:ClaveDesarrolloLocalNoUsarEnProduccion}
+    expiration-ms: 86400000
     refresh-expiration-ms: 604800000
 
   verificacion:
     minutos-expiracion: 15
     longitud-codigo: 6
 
-  frontend-url: http://localhost:3000
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}
 
-  # ============================================================
-  # CONFIGURACION n8n - Webhooks para envio de correos
-  # Reemplazar las URLs con las de tu instancia en n8n.cloud
-  # ============================================================
+  cors:
+    origenes-permitidos: ${CORS_ORIGINS:http://localhost:3000,http://localhost:5173}
+
   n8n:
-    webhook-verificacion: https://djpa.app.n8n.cloud/webhook/verificacion-correo
-    webhook-bienvenida: https://djpa.app.n8n.cloud/webhook/Bienvenida Correo
+    webhook-verificacion: ${N8N_WEBHOOK_VERIFICACION:http://localhost:5678/webhook-test/verificacion-correo}
+    webhook-bienvenida: ${N8N_WEBHOOK_BIENVENIDA:http://localhost:5678/webhook-test/bienvenida-correo}
 
 server:
   port: 8080
+  address: 0.0.0.0
 
 logging:
   level:
     com.finanzas: DEBUG
     org.springframework.security: INFO
+
+
+

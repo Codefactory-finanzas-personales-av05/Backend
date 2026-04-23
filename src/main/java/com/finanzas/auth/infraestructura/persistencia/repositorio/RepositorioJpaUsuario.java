@@ -5,10 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-// Repositorio Spring Data JPA - Spring genera la implementacion automaticamente
+// Spring Data genera la implementacion automaticamente a partir del nombre de los metodos
 public interface RepositorioJpaUsuario extends JpaRepository<EntidadUsuario, Long> {
 
+    // SELECT * FROM usuarios WHERE correo = ?
     Optional<EntidadUsuario> findByCorreo(String correo);
 
+    // SELECT COUNT(*) > 0 FROM usuarios WHERE correo = ?
     boolean existsByCorreo(String correo);
 }

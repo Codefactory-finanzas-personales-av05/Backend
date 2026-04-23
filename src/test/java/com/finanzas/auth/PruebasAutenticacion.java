@@ -3,9 +3,8 @@ package com.finanzas.auth;
 import com.finanzas.auth.aplicacion.dto.peticion.PeticionLogin;
 import com.finanzas.auth.aplicacion.dto.peticion.PeticionRegistro;
 import com.finanzas.auth.aplicacion.dto.respuesta.RespuestaRegistro;
-import com.finanzas.auth.dominio.puertos.entrada.CasoDeUsoAutenticacion;
-import com.finanzas.auth.dominio.puertos.salida.PuertoRepositorioUsuario;
 import com.finanzas.auth.compartido.excepcion.ExcepcionAutenticacion;
+import com.finanzas.auth.dominio.puertos.entrada.CasoDeUsoAutenticacion;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,11 +13,10 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
- * Pruebas de integracion - levantan el contexto completo de Spring Boot.
+ * Pruebas de integracion — levantan el contexto completo de Spring Boot con H2.
  *
- * @ActiveProfiles("test") activa el archivo application-test.yml que
- * fuerza el uso de H2 en memoria. Esto permite que las pruebas funcionen
- * igual sin importar si en produccion se usa PostgreSQL, MySQL u otro motor.
+ * @ActiveProfiles("test") activa application-test.yml que fuerza H2 en memoria.
+ * Funciona igual sin importar si en produccion se usa PostgreSQL.
  */
 @SpringBootTest
 @ActiveProfiles("test")
@@ -27,9 +25,6 @@ class PruebasAutenticacion {
 
     @Autowired
     private CasoDeUsoAutenticacion casoDeUsoAuth;
-
-    @Autowired
-    private PuertoRepositorioUsuario repositorioUsuario;
 
     @Test
     @Order(1)
@@ -49,17 +44,15 @@ class PruebasAutenticacion {
 
     @Test
     @Order(2)
-    @DisplayName("Registrar correo duplicado debe lanzar excepcion")
+    @DisplayName("Registrar correo duplicado debe lanzar excepcion CONFLICT")
     void registrarCorreoDuplicado_debeLanzarExcepcion() {
         PeticionRegistro peticion = new PeticionRegistro();
         peticion.setCorreo("duplicado@test.com");
         peticion.setContrasena("Clave123!");
         peticion.setConfirmarContrasena("Clave123!");
 
-        // Primer registro - debe funcionar
         casoDeUsoAuth.registrar(peticion);
 
-        // Segundo registro con el mismo correo - debe fallar
         assertThrows(ExcepcionAutenticacion.class, () -> casoDeUsoAuth.registrar(peticion));
     }
 
@@ -67,18 +60,17 @@ class PruebasAutenticacion {
     @Order(3)
     @DisplayName("Login sin verificar el correo debe lanzar excepcion")
     void loginSinVerificar_debeLanzarExcepcion() {
-        // Registrar sin verificar
         PeticionRegistro peticionRegistro = new PeticionRegistro();
         peticionRegistro.setCorreo("sinverificar@test.com");
         peticionRegistro.setContrasena("Clave123!");
         peticionRegistro.setConfirmarContrasena("Clave123!");
         casoDeUsoAuth.registrar(peticionRegistro);
 
-        // Intentar login sin verificar el correo
         PeticionLogin peticionLogin = new PeticionLogin();
         peticionLogin.setCorreo("sinverificar@test.com");
         peticionLogin.setContrasena("Clave123!");
 
-        assertThrows(ExcepcionAutenticacion.class, () -> casoDeUsoAuth.iniciarSesion(peticionLogin));
+        assertThrows(ExcepcionAutenticacion.class,
+                () -> casoDeUsoAuth.iniciarSesion(peticionLogin));
     }
 }

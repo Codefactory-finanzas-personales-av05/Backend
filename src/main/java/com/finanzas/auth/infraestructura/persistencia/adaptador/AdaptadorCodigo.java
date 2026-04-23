@@ -1,5 +1,6 @@
 package com.finanzas.auth.infraestructura.persistencia.adaptador;
 
+import com.finanzas.auth.compartido.excepcion.ExcepcionAutenticacion;
 import com.finanzas.auth.dominio.modelo.CodigoVerificacion;
 import com.finanzas.auth.dominio.puertos.salida.PuertoRepositorioCodigo;
 import com.finanzas.auth.infraestructura.persistencia.entidad.EntidadCodigoVerificacion;
@@ -7,13 +8,11 @@ import com.finanzas.auth.infraestructura.persistencia.entidad.EntidadUsuario;
 import com.finanzas.auth.infraestructura.persistencia.repositorio.RepositorioJpaCodigo;
 import com.finanzas.auth.infraestructura.persistencia.repositorio.RepositorioJpaUsuario;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-/*
- * Adaptador de SALIDA para los codigos de verificacion.
- */
 @Component
 @RequiredArgsConstructor
 public class AdaptadorCodigo implements PuertoRepositorioCodigo {
@@ -23,10 +22,10 @@ public class AdaptadorCodigo implements PuertoRepositorioCodigo {
 
     @Override
     public CodigoVerificacion guardar(CodigoVerificacion codigo) {
-        
         EntidadUsuario entidadUsuario = repositorioJpaUsuario
                 .findById(codigo.getUsuarioId())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado: " + codigo.getUsuarioId()));
+                .orElseThrow(() -> new ExcepcionAutenticacion(
+                        "Usuario no encontrado al guardar codigo", HttpStatus.NOT_FOUND));
 
         EntidadCodigoVerificacion entidad = ConvertidorCodigo.aEntidad(codigo, entidadUsuario);
         EntidadCodigoVerificacion guardado = repositorioJpa.save(entidad);
@@ -37,16 +36,13 @@ public class AdaptadorCodigo implements PuertoRepositorioCodigo {
     public Optional<CodigoVerificacion> buscarCodigoActivo(
             Long usuarioId, String codigo, CodigoVerificacion.TipoCodigo tipo) {
 
-        EntidadUsuario entidadUsuario = repositorioJpaUsuario.findById(usuarioId)
-                .orElse(null);
-
-        if (entidadUsuario == null) return Optional.empty();
-
-        EntidadCodigoVerificacion.TipoCodigo tipoEntidad =
-                EntidadCodigoVerificacion.TipoCodigo.valueOf(tipo.name());
-
-        return repositorioJpa
-                .findByUsuarioAndCodigoAndTipoAndUsadoFalse(entidadUsuario, codigo, tipoEntidad)
+        return repositorioJpaUsuario.findById(usuarioId)
+                .flatMap(entidadUsuario -> {
+                    EntidadCodigoVerificacion.TipoCodigo tipoEntidad =
+                            EntidadCodigoVerificacion.TipoCodigo.valueOf(tipo.name());
+                    return repositorioJpa.findByUsuarioAndCodigoAndTipoAndUsadoFalse(
+                            entidadUsuario, codigo, tipoEntidad);
+                })
                 .map(ConvertidorCodigo::aDominio);
     }
 

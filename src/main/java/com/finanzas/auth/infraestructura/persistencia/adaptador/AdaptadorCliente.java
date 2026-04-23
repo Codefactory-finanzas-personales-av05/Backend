@@ -9,9 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-/*
- * Adaptador de SALIDA para clientes.
- */
 @Component
 @RequiredArgsConstructor
 public class AdaptadorCliente implements PuertoRepositorioCliente {
@@ -30,24 +27,24 @@ public class AdaptadorCliente implements PuertoRepositorioCliente {
         return repositorioJpa.findById(idCliente).map(this::aDominio);
     }
 
-  
     private Cliente aDominio(EntidadCliente entidad) {
         if (entidad == null) return null;
         return Cliente.builder()
                 .idCliente(entidad.getIdCliente())
                 .nombre(entidad.getNombre())
-                .email(entidad.getEmail())
+                .correoContacto(entidad.getCorreoContacto())
+                .imagenPerfil(entidad.getImagenPerfil())
                 .descripcion(entidad.getDescripcion())
                 .build();
     }
 
-    
     private EntidadCliente aEntidad(Cliente cliente) {
         if (cliente == null) return null;
         return EntidadCliente.builder()
                 .idCliente(cliente.getIdCliente())
-                .nombre(cliente.getNombre())
-                .email(cliente.getEmail())
+                .nombre(cliente.getNombre() != null ? cliente.getNombre() : "")
+                .correoContacto(cliente.getCorreoContacto())
+                .imagenPerfil(cliente.getImagenPerfil())
                 .descripcion(cliente.getDescripcion())
                 .build();
     }

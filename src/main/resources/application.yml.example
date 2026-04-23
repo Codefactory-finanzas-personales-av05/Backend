@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://HOST:PORT/DATABASE
+    username: TU_USUARIO_AQUI
+    password: TU_PASSWORD_AQUI
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration-ms: 86400000
+  n8n:
+    webhook-verificacion: ${N8N_WEBHOOK_VERIFICACION}
+    webhook-bienvenida: ${N8N_WEBHOOK_BIENVENIDA}
+  cors:
+    origenes-permitidos: ${CORS_ORIGINS:http://localhost:3000}

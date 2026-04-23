@@ -1,7 +1,6 @@
 spring:
-  # Forzar H2 en memoria para todas las pruebas de integracion.
-  # El exclude de mail se mantiene aqui porque en las pruebas
-  # no necesitamos llamar a n8n real.
+  # Fuerza H2 en memoria para todas las pruebas
+  # Se activa con @ActiveProfiles("test") en las clases de prueba
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration
 
@@ -23,7 +22,7 @@ spring:
 
 app:
   jwt:
-    secret: ClaveSecretaParaPruebasUnitariasNoUsarEnProduccion!
+    secret: ClaveSecretaParaPruebasNoUsarEnProduccion!
     expiration-ms: 86400000
     refresh-expiration-ms: 604800000
 
@@ -33,9 +32,11 @@ app:
 
   frontend-url: http://localhost:3000
 
-  # En pruebas los webhooks apuntan a localhost que no existe
-  # Si n8n no responde, AdaptadorCorreo captura el error y continua
-  # El codigo siempre aparece en los logs como respaldo
+  cors:
+    origenes-permitidos: http://localhost:3000
+
+  # En pruebas los webhooks apuntan a localhost (no existe)
+  # AdaptadorCorreo captura el error y continua normalmente
   n8n:
     webhook-verificacion: http://localhost:5678/webhook-test/verificacion-correo
     webhook-bienvenida: http://localhost:5678/webhook-test/bienvenida-correo

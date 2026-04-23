@@ -10,13 +10,14 @@ import java.util.Optional;
 
 public interface RepositorioJpaCodigo extends JpaRepository<EntidadCodigoVerificacion, Long> {
 
+    // Busca el codigo activo (no usado) de un usuario para un tipo especifico
     Optional<EntidadCodigoVerificacion> findByUsuarioAndCodigoAndTipoAndUsadoFalse(
             EntidadUsuario usuario,
             String codigo,
             EntidadCodigoVerificacion.TipoCodigo tipo
     );
 
-    // Invalida todos los codigos activos anteriores del mismo tipo
+    // Invalida todos los codigos anteriores del mismo tipo para no tener duplicados activos
     @Modifying
     @Query("UPDATE EntidadCodigoVerificacion c SET c.usado = true " +
            "WHERE c.usuario = :usuario AND c.tipo = :tipo AND c.usado = false")

@@ -3,14 +3,14 @@ package com.finanzas.auth.aplicacion.dto.respuesta;
 import lombok.Builder;
 import lombok.Data;
 
-// Lo que devuelve el endpoint de login: el token JWT y datos del usuario mas cliente
+// Lo que devuelve el endpoint de login: token JWT + datos del usuario + datos del cliente
 @Data
 @Builder
 public class RespuestaLogin {
 
     private String accessToken;
     private String tokenType;
-    private Long expiraEn; 
+    private Long expiraEn;
     private DatosUsuario usuario;
 
     @Data
@@ -19,8 +19,6 @@ public class RespuestaLogin {
         private Long id;
         private String correo;
         private String estado;
-
-        // Datos del cliente asociado (puede ser null si aun no tiene perfil)
         private DatosCliente cliente;
     }
 
@@ -29,7 +27,8 @@ public class RespuestaLogin {
     public static class DatosCliente {
         private Long idCliente;
         private String nombre;
-        private String email;
+        private String correoContacto;
+        private String imagenPerfil;
         private String descripcion;
     }
 }

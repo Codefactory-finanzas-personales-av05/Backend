@@ -4,8 +4,8 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 /*
- * Este es el modelo de dominio del Usuario.
- * 
+ * Modelo de dominio del Usuario.
+ * Sin anotaciones de JPA ni de Spring.
  */
 @Getter
 @Setter
@@ -16,9 +16,7 @@ public class Usuario {
 
     private Long id;
     private String correo;
-    private String contrasena; 
-
-    // Relacion con Cliente - cada usuario tiene un perfil de cliente
+    private String contrasena;
     private Long idCliente;
 
     @Builder.Default
@@ -27,10 +25,9 @@ public class Usuario {
     @Builder.Default
     private boolean correoVerificado = false;
 
-    private LocalDateTime fechaCreacion;
-    private LocalDateTime fechaActualizacion;
+    private LocalDateTime creadoEn;
+    private LocalDateTime actualizadoEn;
 
-    // Estados posibles de una cuenta
     public enum EstadoCuenta {
         PENDIENTE_VERIFICACION,
         ACTIVO,

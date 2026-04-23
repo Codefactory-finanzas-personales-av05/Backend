@@ -1,5 +1,6 @@
 package com.finanzas.auth.infraestructura.seguridad;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,19 +10,26 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /*
- * Configuracion de seguridad de Spring Security.
- * Los endpoints de autenticacion son publicos, el resto requiere token.
- * La H2 Console tambien se abre para poder ver los datos en pruebas.
+ * Configuracion de seguridad actualizada para Sprint 2.
+ *
+ * Endpoints publicos: registro, verificar, login, reenviar-codigo, h2-console
+ * Endpoints protegidos con JWT: /api/auth/descripcion, /api/transacciones/**
  */
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class ConfiguracionSeguridad {
 
-    // Endpoints que no necesitan token para acceder
+    private final FiltroJwt filtroJwt;
+
     private static final String[] ENDPOINTS_PUBLICOS = {
-        "/api/auth/**",
+        "/api/auth/registro",
+        "/api/auth/verificar",
+        "/api/auth/login",
+        "/api/auth/reenviar-codigo",
         "/h2-console/**",
         "/actuator/health"
     };
@@ -29,20 +37,15 @@ public class ConfiguracionSeguridad {
     @Bean
     public SecurityFilterChain configurarSeguridad(HttpSecurity http) throws Exception {
         http
-            // Desactivamos CSRF porque usamos JWT (sin sesion)
             .csrf(AbstractHttpConfigurer::disable)
-
-            // Sin sesion - cada request trae su propio token
             .sessionManagement(sesion ->
                 sesion.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-            // Reglas de acceso
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(ENDPOINTS_PUBLICOS).permitAll()
+                // /api/auth/descripcion y todo /api/transacciones/** requieren JWT
                 .anyRequest().authenticated()
             )
-
-            // Necesario para que el navegador pueda cargar los frames de H2 Console
+            .addFilterBefore(filtroJwt, UsernamePasswordAuthenticationFilter.class)
             .headers(headers -> headers
                 .frameOptions(frame -> frame.sameOrigin())
             );
@@ -52,7 +55,6 @@ public class ConfiguracionSeguridad {
 
     @Bean
     public PasswordEncoder codificadorContrasena() {
-        // BCrypt con factor de costo 12 (buen balance entre seguridad y velocidad)
         return new BCryptPasswordEncoder(12);
     }
 }

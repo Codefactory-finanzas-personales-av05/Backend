@@ -9,9 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-/*
- * Adaptador de SALIDA para usuarios.
- */
 @Component
 @RequiredArgsConstructor
 public class AdaptadorUsuario implements PuertoRepositorioUsuario {

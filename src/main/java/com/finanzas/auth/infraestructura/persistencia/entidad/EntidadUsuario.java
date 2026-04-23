@@ -9,24 +9,26 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 /*
- * Entidad JPA del usuario.
+ * Entidad JPA sincronizada con el script PostgreSQL del compañero de BD.
+ *
+ * Cambios respecto a la version anterior:
+ * - "id"                  → "id_usuario"
+ * - "fecha_creacion"      → "creado_en"
+ * - "fecha_actualizacion" → "actualizado_en"
+ * - Se mantiene "correo_verificado" (acordado con el compañero de BD)
+ * - Estado usa PENDIENTE_VERIFICACION (acordado con el compañero)
  */
 @Entity
-@Table(
-    name = "usuarios",
-    uniqueConstraints = @UniqueConstraint(columnNames = "correo", name = "uk_correo_usuario")
-)
+@Table(name = "usuarios",
+    uniqueConstraints = @UniqueConstraint(columnNames = "correo", name = "uk_usuarios_correo"))
 @EntityListeners(AuditingEntityListener.class)
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class EntidadUsuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id_usuario")
+    private Long idUsuario;
 
     @Column(nullable = false, unique = true, length = 150)
     private String correo;
@@ -34,27 +36,28 @@ public class EntidadUsuario {
     @Column(nullable = false)
     private String contrasena;
 
-    // Llave foranea hacia la tabla clientes
-    @Column(name = "id_cliente")
+    // FK hacia clientes — UNIQUE porque es relacion 1:1
+    @Column(name = "id_cliente", unique = true)
     private Long idCliente;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    @Builder.Default
-    private EstadoCuenta estado = EstadoCuenta.PENDIENTE_VERIFICACION;
+    @Column(nullable = false, length = 30)
+    private EstadoCuenta estado;
 
+    // Campo acordado con el compañero de BD para el flujo de verificacion
     @Column(name = "correo_verificado", nullable = false)
     @Builder.Default
     private boolean correoVerificado = false;
 
     @CreatedDate
-    @Column(name = "fecha_creacion", updatable = false)
-    private LocalDateTime fechaCreacion;
+    @Column(name = "creado_en", updatable = false)
+    private LocalDateTime creadoEn;
 
     @LastModifiedDate
-    @Column(name = "fecha_actualizacion")
-    private LocalDateTime fechaActualizacion;
+    @Column(name = "actualizado_en")
+    private LocalDateTime actualizadoEn;
 
+    // Acordado con el compañero de BD: PENDIENTE_VERIFICACION en vez de PENDIENTE
     public enum EstadoCuenta {
         PENDIENTE_VERIFICACION,
         ACTIVO,

@@ -4,36 +4,32 @@ import com.finanzas.auth.dominio.modelo.Usuario;
 import com.finanzas.auth.infraestructura.persistencia.entidad.EntidadUsuario;
 
 /*
- * Convierte entre el modelo de dominio y la entidad JPA.
- * Esto es necesario para mantener el dominio limpio sin anotaciones de Spring.
- *
- * Cada vez que sacamos datos de la BD los convertimos a dominio,
- * y cuando vamos a guardar convertimos de dominio a entidad.
+ * Convierte entre Usuario (dominio) y EntidadUsuario (JPA).
  */
 public class ConvertidorUsuario {
 
-    // De entidad JPA -> modelo de dominio
+    // EntidadUsuario → Usuario (dominio)
     public static Usuario aDominio(EntidadUsuario entidad) {
         if (entidad == null) return null;
 
         return Usuario.builder()
-                .id(entidad.getId())
+                .id(entidad.getIdUsuario())
                 .correo(entidad.getCorreo())
                 .contrasena(entidad.getContrasena())
                 .idCliente(entidad.getIdCliente())
                 .estado(Usuario.EstadoCuenta.valueOf(entidad.getEstado().name()))
                 .correoVerificado(entidad.isCorreoVerificado())
-                .fechaCreacion(entidad.getFechaCreacion())
-                .fechaActualizacion(entidad.getFechaActualizacion())
+                .creadoEn(entidad.getCreadoEn())
+                .actualizadoEn(entidad.getActualizadoEn())
                 .build();
     }
 
-    // De modelo de dominio -> entidad JPA
+    // Usuario (dominio) → EntidadUsuario
     public static EntidadUsuario aEntidad(Usuario usuario) {
         if (usuario == null) return null;
 
         return EntidadUsuario.builder()
-                .id(usuario.getId())
+                .idUsuario(usuario.getId())
                 .correo(usuario.getCorreo())
                 .contrasena(usuario.getContrasena())
                 .idCliente(usuario.getIdCliente())

@@ -1,0 +1,14 @@
+# Archivos sensibles
+application.yml
+application-test.yml
+application.properties
+
+# Compilados
+target/
+*.class
+*.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/

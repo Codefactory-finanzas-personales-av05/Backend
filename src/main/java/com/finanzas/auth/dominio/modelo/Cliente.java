@@ -3,9 +3,12 @@ package com.finanzas.auth.dominio.modelo;
 import lombok.*;
 
 /*
- * 
- * Guarda la informacion personal del usuario: nombre, email y descripcion.
- * 
+ * Modelo de dominio del Cliente.
+ * Sin anotaciones de JPA — el dominio no sabe de bases de datos.
+ *
+ * Cambios:
+ * - "email" → "correoContacto"
+ * - Se agrego "imagenPerfil"
  */
 @Getter
 @Setter
@@ -16,6 +19,7 @@ public class Cliente {
 
     private Long idCliente;
     private String nombre;
-    private String email;
-    private String descripcion;  
+    private String correoContacto;
+    private String imagenPerfil;
+    private String descripcion;
 }

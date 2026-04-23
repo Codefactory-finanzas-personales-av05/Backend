@@ -6,9 +6,12 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 /*
- * Entidad JPA para los codigos de verificacion.
- * La relacion con EntidadUsuario es ManyToOne: un usuario
- * puede tener varios codigos a lo largo del tiempo.
+ * Entidad JPA sincronizada con el script PostgreSQL del compañero de BD.
+ *
+ * Cambios respecto a la version anterior:
+ * - "id"               → "id_codigo"
+ * - "fecha_expiracion" → "expira_en"
+ * - "fecha_creacion"   → "creado_en"
  */
 @Entity
 @Table(name = "codigos_verificacion")
@@ -17,30 +20,30 @@ public class EntidadCodigoVerificacion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id_codigo")
+    private Long idCodigo;
 
-    // Llave foranea hacia la tabla usuarios
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "id_usuario", nullable = false)
     private EntidadUsuario usuario;
 
     @Column(nullable = false, length = 10)
     private String codigo;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     private TipoCodigo tipo;
 
-    @Column(name = "fecha_expiracion", nullable = false)
-    private LocalDateTime fechaExpiracion;
+    @Column(name = "expira_en", nullable = false)
+    private LocalDateTime expiraEn;
 
     @Column(name = "usado", nullable = false)
     @Builder.Default
     private boolean usado = false;
 
-    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    @Column(name = "creado_en", nullable = false, updatable = false)
     @Builder.Default
-    private LocalDateTime fechaCreacion = LocalDateTime.now();
+    private LocalDateTime creadoEn = LocalDateTime.now();
 
     public enum TipoCodigo {
         VERIFICACION_CORREO,

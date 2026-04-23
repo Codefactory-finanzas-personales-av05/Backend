@@ -1,7 +1,7 @@
-
-# Gestión Financiera — Documentación del Proyecto
+# Gestión Financiera — Backend
 
 > **Tecnología:** Spring Boot 3.2 · Java 17 · Arquitectura Hexagonal · PostgreSQL  
+
 
 ---
 
@@ -10,7 +10,7 @@
 | Sprint | Descripción | Estado |
 |---|---|---|
 | **Sprint 1** | Módulo de autenticación (registro, verificación, login, perfil) | ✅ Completado |
-| **Sprint 2** | *(próximamente)* | 🔜 Pendiente |
+| **Sprint 2** | Mejoras arquitectónicas · PostgreSQL · Supabase · HU-03/04/05 Transacciones | ✅ Completado |
 | **Sprint 3** | *(próximamente)* | 🔜 Pendiente |
 
 ---
@@ -858,9 +858,614 @@ El backend envía la siguiente estructura JSON en el cuerpo de la petición:
 
 ---
 
-# 🔜 SPRINT 2 — *(próximamente)*
+# ✅ SPRINT 2 — Mejoras Arquitectónicas + PostgreSQL + Supabase + Transacciones
 
-> Esta sección se completará al iniciar el Sprint 2.
+---
+
+## Tabla de contenidos — Sprint 2
+
+1. [Descripción del sprint](#s2-1-descripción-del-sprint)
+2. [Historias de usuario implementadas](#s2-2-historias-de-usuario-implementadas)
+3. [Mejoras aplicadas del informe del profesor](#s2-3-mejoras-aplicadas-del-informe-del-profesor)
+4. [Integración con Supabase](#s2-4-integración-con-supabase)
+5. [Sincronización con el script de BD](#s2-5-sincronización-con-el-script-de-bd)
+6. [Modelo de datos actualizado](#s2-6-modelo-de-datos-actualizado)
+7. [Endpoints nuevos](#s2-7-endpoints-nuevos)
+8. [Flujo de transacciones](#s2-8-flujo-de-transacciones)
+9. [Categorías iniciales automáticas](#s2-9-categorías-iniciales-automáticas)
+10. [Estructura del proyecto actualizada](#s2-10-estructura-del-proyecto-actualizada)
+11. [Pruebas unitarias Sprint 2](#s2-11-pruebas-unitarias-sprint-2)
+12. [Variables de entorno requeridas](#s2-12-variables-de-entorno-requeridas)
+13. [Cómo ejecutar con Supabase](#s2-13-cómo-ejecutar-con-supabase)
+14. [Probar con Postman](#s2-14-probar-con-postman)
+15. [Decisiones de diseño Sprint 2](#s2-15-decisiones-de-diseño-sprint-2)
+
+---
+
+## S2-1. Descripción del sprint
+
+El Sprint 2 tiene dos objetivos principales:
+
+**1. Mejoras arquitectónicas** basadas en la revisión del profesor (Informe EAV05), corrigiendo problemas críticos de seguridad, acoplamiento y calidad de código detectados en el Sprint 1.
+
+**2. Implementación de transacciones** con tres historias de usuario: registrar ingreso (HU-03), registrar gasto (HU-04) y visualizar historial (HU-05).
+
+**Base de datos en producción:** Supabase (PostgreSQL en la nube). Las pruebas unitarias siguen usando H2 gracias a `@ActiveProfiles("test")`.
+
+---
+
+## S2-2. Historias de usuario implementadas
+
+| # | Historia | Endpoint | Resultado |
+|---|---|---|---|
+| **HU-03** | El usuario puede registrar un ingreso indicando monto, fecha y categoría | `POST /api/transacciones` con `tipo: INGRESO` | `200` exitoso / `400` validación fallida |
+| **HU-04** | El usuario puede registrar un gasto indicando monto, fecha y categoría | `POST /api/transacciones` con `tipo: GASTO` | `200` exitoso / `400` validación fallida |
+| **HU-05** | El usuario puede ver el historial paginado de todas sus transacciones | `GET /api/transacciones/historial` | `200` con lista paginada y balance |
+| Extra | El usuario puede ver sus categorías disponibles | `GET /api/transacciones/categorias` | `200` con lista de categorías |
+
+---
+
+## S2-3. Mejoras aplicadas del informe del profesor
+
+El profesor realizó una revisión arquitectónica completa (Informe EAV05). A continuación el detalle de cada corrección aplicada:
+
+### 🔴 Críticos corregidos
+
+| Código | Problema | Solución aplicada |
+|---|---|---|
+| **C1** | Secreto JWT hardcodeado en el repositorio | Se movió a variable de entorno `${JWT_SECRET}` |
+| **C2** | URLs de webhooks n8n hardcodeadas en el repo | Se movieron a variables de entorno `${N8N_WEBHOOK_*}` |
+| **C3** | URL de webhook con espacio sin encodear (`Bienvenida Correo`) | Corregido a `bienvenida-correo` sin espacios |
+
+### 🟠 Importantes corregidos
+
+| Código | Problema | Solución aplicada |
+|---|---|---|
+| **I5** | Sin filtro JWT — el token no se validaba en requests | Se creó `FiltroJwt.java` que valida el token en cada request |
+| **I8** | `RestTemplate` instanciado con `new` — no mockeable | Se definió como `@Bean` en `ConfiguracionApp.java` |
+| **M10** | CORS hardcodeado para localhost | Ahora lee los orígenes desde `${CORS_ORIGINS}` |
+
+### 🟡 Mejoras de código corregidas
+
+| Código | Problema | Solución aplicada |
+|---|---|---|
+| **M1** | `GeneradorCodigo.generar(6)` hardcodeado | Usa `@Value("${app.verificacion.longitud-codigo:6}")` |
+| **M3** | `orElse(null)` + `if (cliente != null)` — anti-patrón | Reemplazado por `.map(...).orElse(null)` correcto |
+| **M5** | Fallo silencioso de correos | Error visible en logs con nivel `ERROR` |
+| **M6** | Código de verificación en texto plano en logs | Eliminado — ya no aparece en los logs |
+| **M7** | Assertion vacía en pruebas que siempre pasaba | Reemplazada por assertions reales |
+| **M11** | Tiempo de expiración hardcodeado en mensaje | Usa `${app.verificacion.minutos-expiracion}` |
+| **M12** | Typo en nombre de método en `PruebasUtilJwt` | Corregido |
+
+### Archivos modificados por las mejoras
+
+```
+src/main/
+├── resources/application.yml                     ← Variables de entorno para JWT, n8n, CORS, BD
+├── java/com/finanzas/auth/infraestructura/
+│   ├── configuracion/ConfiguracionApp.java        ← RestTemplate como Bean + CORS desde env
+│   ├── correo/AdaptadorCorreo.java                ← RestTemplate inyectado, sin código en logs
+│   └── seguridad/
+│       ├── FiltroJwt.java                         ← NUEVO: valida JWT en cada request
+│       └── ConfiguracionSeguridad.java            ← Integra FiltroJwt
+└── aplicacion/casosdeuso/ServicioAutenticacion.java ← longitudCodigo desde config, .map() correcto
+```
+
+---
+
+## S2-4. Integración con Supabase
+
+**Supabase** es una plataforma de PostgreSQL en la nube con plan gratuito. El proyecto usa Supabase como base de datos de producción desde el Sprint 2.
+
+### Datos de conexión
+
+La conexión está configurada directamente en `application.yml`:
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://aws-1-us-west-2.pooler.supabase.com:6543/postgres?user=postgres.wfgbepodmukcfupozmaa&password=KWiif9Ah_j/Tth5
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+```
+
+### Conexión desde DBeaver (para el equipo)
+
+| Campo | Valor |
+|---|---|
+| **Host** | `aws-1-us-west-2.pooler.supabase.com` |
+| **Port** | `6543` |
+| **Database** | `postgres` |
+| **Username** | `postgres.wfgbepodmukcfupozmaa` |
+| **Password** | `KWiif9Ah_j/Tth5` |
+
+### Cambios aplicados en Supabase por el equipo de BD
+
+El compañero de BD ejecutó en el SQL Editor de Supabase:
+
+```sql
+-- Agregar correo_verificado (campo requerido por el backend)
+ALTER TABLE usuarios
+ADD COLUMN IF NOT EXISTS correo_verificado BOOLEAN DEFAULT FALSE NOT NULL;
+
+-- Cambiar PENDIENTE por PENDIENTE_VERIFICACION en el CHECK
+ALTER TABLE usuarios DROP CONSTRAINT IF EXISTS usuarios_estado_check;
+ALTER TABLE usuarios ADD CONSTRAINT usuarios_estado_check
+CHECK (estado IN ('ACTIVO', 'INACTIVO', 'PENDIENTE_VERIFICACION', 'BLOQUEADO'));
+```
+
+---
+
+## S2-5. Sincronización con el script de BD
+
+Durante este sprint se detectaron diferencias entre el código Java y el script SQL del compañero. Se acordaron los siguientes cambios:
+
+| Campo anterior | Campo nuevo | Tabla | Motivo |
+|---|---|---|---|
+| `email` | `correo_contacto` | `clientes` | Nombre del script del compañero |
+| `fecha_creacion` | `creado_en` | todas | Estandarización |
+| `fecha_actualizacion` | `actualizado_en` | `usuarios` | Estandarización |
+| `fecha_expiracion` | `expira_en` | `codigos_verificacion` | Estandarización |
+| `id` | `id_codigo` | `codigos_verificacion` | Nombre más descriptivo |
+| *(no existía)* | `imagen_perfil` | `clientes` | Nuevo campo del script |
+| `PENDIENTE` | `PENDIENTE_VERIFICACION` | enum estado | Acordado con equipo BD |
+
+---
+
+## S2-6. Modelo de datos actualizado
+
+```
+┌─────────────────────────────┐       ┌──────────────────────────────────┐
+│          clientes           │       │            usuarios               │
+├─────────────────────────────┤       ├──────────────────────────────────┤
+│ id_cliente    (PK)          │◄──────│ id_usuario          (PK)         │
+│ nombre        NOT NULL      │       │ correo              UNIQUE        │
+│ correo_contacto UNIQUE      │       │ contrasena          (BCrypt)      │
+│ imagen_perfil               │       │ correo_verificado   BOOLEAN       │
+│ descripcion   TEXT          │       │ estado              (ENUM)        │
+│ creado_en     TIMESTAMPTZ   │       │ id_cliente          (FK)          │
+│ actualizado_en              │       │ creado_en           TIMESTAMPTZ   │
+└─────────────────────────────┘       │ actualizado_en                    │
+                                      └──────────────────────────────────┘
+                                                    │
+                    ┌───────────────────────────────┤
+                    │                               │ 1:N
+                    ▼                               ▼
+┌──────────────────────────┐    ┌──────────────────────────────┐
+│       categorias         │    │    codigos_verificacion       │
+├──────────────────────────┤    ├──────────────────────────────┤
+│ id_categoria   (PK)      │    │ id_codigo     (PK)           │
+│ nombre                   │    │ id_usuario    (FK)           │
+│ icono                    │    │ codigo        (6 dig.)       │
+│ tipo  INGRESO/GASTO      │    │ tipo          (ENUM)         │
+│ id_cliente     (FK)      │    │ expira_en     TIMESTAMPTZ    │
+│ creado_en                │    │ usado         BOOLEAN        │
+│ actualizado_en           │    │ creado_en     TIMESTAMPTZ    │
+└──────────────────────────┘    └──────────────────────────────┘
+         │
+         │ 1:N
+         ▼
+┌──────────────────────────┐
+│      transacciones       │
+├──────────────────────────┤
+│ id_transaccion  (PK)     │
+│ nombre                   │
+│ monto  NUMERIC(15,2)     │
+│ movimiento_en            │
+│ tipo   INGRESO/GASTO     │
+│ id_cliente   (FK)        │
+│ id_categoria (FK)        │
+│ creado_en                │
+│ actualizado_en           │
+└──────────────────────────┘
+```
+
+---
+
+## S2-7. Endpoints nuevos
+
+**Base URL:** `http://localhost:8080/api/transacciones`
+
+Todos los endpoints requieren header `Authorization: Bearer <token>`.
+
+---
+
+### POST `/api/transacciones` — HU-03 y HU-04
+
+Registra un ingreso o gasto. El tipo se controla con el campo `tipo`.
+
+**Request:**
+```json
+{
+  "nombre": "Salario abril",
+  "monto": 3000000,
+  "movimientoEn": "2026-04-19T08:00:00",
+  "tipo": "INGRESO",
+  "idCategoria": 1
+}
+```
+
+**Validaciones:**
+- `monto` es obligatorio y debe ser mayor a `0.01`
+- `tipo` debe ser `INGRESO` o `GASTO`
+- `idCategoria` debe existir y pertenecer al mismo cliente
+- El tipo de la transacción debe coincidir con el tipo de la categoría
+
+**Response 200 OK:**
+```json
+{
+  "status": 200,
+  "mensaje": "Transaccion registrada exitosamente",
+  "data": {
+    "id": 1,
+    "nombre": "Salario abril",
+    "monto": 3000000.00,
+    "movimientoEn": "2026-04-19T08:00:00",
+    "tipo": "INGRESO",
+    "nombreCategoria": "Salario",
+    "iconoCategoria": "💼",
+    "balanceActual": 3000000.00,
+    "creadoEn": "2026-04-19T08:00:01"
+  }
+}
+```
+
+**Response 400** (monto vacío o tipo no coincide con categoría):
+```json
+{
+  "status": 400,
+  "mensaje": "El monto es obligatorio",
+  "data": null
+}
+```
+
+**Response 403** (categoría de otro cliente):
+```json
+{
+  "status": 403,
+  "mensaje": "No tienes permiso para usar esta categoria",
+  "data": null
+}
+```
+
+---
+
+### GET `/api/transacciones/historial` — HU-05
+
+Devuelve el historial paginado ordenado de más reciente a más antiguo.
+
+**Query params:**
+
+| Param | Default | Descripción |
+|---|---|---|
+| `pagina` | `0` | Número de página (empieza en 0) |
+| `tamano` | `10` | Elementos por página |
+
+**Response 200 OK:**
+```json
+{
+  "status": 200,
+  "mensaje": "Historial obtenido exitosamente",
+  "data": {
+    "transacciones": [
+      {
+        "id": 2,
+        "nombre": "Almuerzo",
+        "monto": 15000.00,
+        "movimientoEn": "2026-04-19T12:30:00",
+        "tipo": "GASTO",
+        "nombreCategoria": "Comida",
+        "iconoCategoria": "🍔"
+      },
+      {
+        "id": 1,
+        "nombre": "Salario abril",
+        "monto": 3000000.00,
+        "movimientoEn": "2026-04-19T08:00:00",
+        "tipo": "INGRESO",
+        "nombreCategoria": "Salario",
+        "iconoCategoria": "💼"
+      }
+    ],
+    "paginaActual": 0,
+    "totalPaginas": 1,
+    "totalElementos": 2,
+    "totalIngresos": 3000000.00,
+    "totalGastos": 15000.00,
+    "balanceActual": 2985000.00
+  }
+}
+```
+
+---
+
+### GET `/api/transacciones/categorias`
+
+Devuelve las categorías del cliente autenticado para poblar el selector del formulario.
+
+**Response 200 OK:**
+```json
+{
+  "status": 200,
+  "mensaje": "Categorias obtenidas exitosamente",
+  "data": [
+    { "idCategoria": 1, "nombre": "Salario",    "icono": "💼", "tipo": "INGRESO" },
+    { "idCategoria": 2, "nombre": "Freelance",  "icono": "💻", "tipo": "INGRESO" },
+    { "idCategoria": 3, "nombre": "Comida",     "icono": "🍔", "tipo": "GASTO"   },
+    { "idCategoria": 4, "nombre": "Transporte", "icono": "🚌", "tipo": "GASTO"   }
+  ]
+}
+```
+
+---
+
+## S2-8. Flujo de transacciones
+
+```
+Cliente (Postman/Frontend)          Servidor                        Supabase
+        │                               │                               │
+        │── POST /registro ────────────►│                               │
+        │                               │── Crear cliente ─────────────►│
+        │                               │── Crear usuario ─────────────►│
+        │                               │── Crear categorias iniciales ►│  ← automático
+        │◄── 200 ──────────────────────│                               │
+        │                               │                               │
+        │── POST /login ───────────────►│                               │
+        │◄── 200 {token} ──────────────│                               │
+        │                               │                               │
+        │── POST /transacciones ───────►│ Authorization: Bearer <token> │
+        │   {nombre, monto, tipo,       │── Validar categoria ─────────►│
+        │    idCategoria}               │── Guardar transaccion ────────►│
+        │                               │── Calcular balance ───────────►│
+        │◄── 200 {balance actualizado}─│                               │
+        │                               │                               │
+        │── GET /historial?pagina=0 ───►│                               │
+        │                               │── Paginar por cliente ────────►│
+        │                               │── Calcular totales ───────────►│
+        │◄── 200 {lista + balance} ────│                               │
+```
+
+---
+
+## S2-9. Categorías iniciales automáticas
+
+Cuando un usuario se registra, el sistema crea automáticamente 7 categorías predeterminadas para que pueda empezar a registrar transacciones de inmediato, sin necesidad de crearlas manualmente.
+
+### Categorías creadas al registrarse
+
+| Nombre | Icono | Tipo |
+|---|---|---|
+| Salario | 💼 | INGRESO |
+| Freelance | 💻 | INGRESO |
+| Otros ingresos | 💰 | INGRESO |
+| Comida | 🍔 | GASTO |
+| Transporte | 🚌 | GASTO |
+| Servicios | 💡 | GASTO |
+| Entretenimiento | 🎮 | GASTO |
+
+### Por qué se hace así
+
+Al registrarse, el usuario ya tiene categorías predeterminadas disponibles de inmediato. Desde el frontend puede agregar sus propias categorías adicionales cuando lo necesite.
+
+---
+
+## S2-10. Estructura del proyecto actualizada
+
+```
+src/main/java/com/finanzas/auth/
+│
+├── dominio/
+│   ├── modelo/
+│   │   ├── Usuario.java
+│   │   ├── Cliente.java
+│   │   ├── CodigoVerificacion.java
+│   │   ├── Categoria.java              ← NUEVO Sprint 2
+│   │   └── Transaccion.java            ← NUEVO Sprint 2
+│   └── puertos/
+│       ├── entrada/
+│       │   ├── CasoDeUsoAutenticacion.java
+│       │   └── CasoDeUsoTransaccion.java   ← NUEVO Sprint 2
+│       └── salida/
+│           ├── PuertoRepositorioUsuario.java
+│           ├── PuertoRepositorioCliente.java
+│           ├── PuertoRepositorioCodigo.java
+│           ├── PuertoCorreo.java
+│           ├── PuertoRepositorioCategoria.java  ← NUEVO Sprint 2
+│           └── PuertoRepositorioTransaccion.java ← NUEVO Sprint 2
+│
+├── aplicacion/
+│   ├── casosdeuso/
+│   │   ├── ServicioAutenticacion.java   ← MODIFICADO: categorias iniciales + mejoras EAV05
+│   │   └── ServicioTransaccion.java     ← NUEVO Sprint 2
+│   └── dto/
+│       ├── peticion/
+│       │   └── PeticionTransaccion.java ← NUEVO Sprint 2
+│       └── respuesta/
+│           ├── RespuestaTransaccion.java    ← NUEVO Sprint 2
+│           ├── RespuestaHistorial.java      ← NUEVO Sprint 2
+│           ├── RespuestaItemHistorial.java  ← NUEVO Sprint 2
+│           ├── RespuestaCategoria.java      ← NUEVO Sprint 2
+│           ├── RespuestaLogin.java          ← MODIFICADO: correoContacto, imagenPerfil
+│           └── RespuestaCliente.java        ← MODIFICADO: correoContacto, imagenPerfil
+│
+└── infraestructura/
+    ├── web/
+    │   ├── ControladorAutenticacion.java
+    │   └── ControladorTransaccion.java      ← NUEVO Sprint 2
+    ├── persistencia/
+    │   ├── entidad/
+    │   │   ├── EntidadUsuario.java           ← MODIFICADO: nombres sincronizados con script BD
+    │   │   ├── EntidadCliente.java           ← MODIFICADO: correoContacto, imagenPerfil
+    │   │   ├── EntidadCodigoVerificacion.java ← MODIFICADO: idCodigo, expiraEn
+    │   │   ├── EntidadCategoria.java         ← NUEVO Sprint 2
+    │   │   └── EntidadTransaccion.java       ← NUEVO Sprint 2
+    │   ├── repositorio/
+    │   │   ├── RepositorioJpaUsuario.java
+    │   │   ├── RepositorioJpaCliente.java
+    │   │   ├── RepositorioJpaCodigo.java
+    │   │   ├── RepositorioJpaCategoria.java  ← NUEVO Sprint 2
+    │   │   └── RepositorioJpaTransaccion.java ← NUEVO Sprint 2
+    │   └── adaptador/
+    │       ├── AdaptadorUsuario.java
+    │       ├── AdaptadorCliente.java         ← MODIFICADO
+    │       ├── AdaptadorCodigo.java
+    │       ├── ConvertidorUsuario.java       ← MODIFICADO
+    │       ├── ConvertidorCodigo.java        ← MODIFICADO
+    │       ├── AdaptadorCategoria.java       ← NUEVO Sprint 2
+    │       └── AdaptadorTransaccion.java     ← NUEVO Sprint 2
+    ├── correo/
+    │   └── AdaptadorCorreo.java              ← MODIFICADO: RestTemplate inyectado
+    ├── seguridad/
+    │   ├── FiltroJwt.java                    ← NUEVO Sprint 2
+    │   └── ConfiguracionSeguridad.java       ← MODIFICADO: integra FiltroJwt
+    └── configuracion/
+        └── ConfiguracionApp.java             ← MODIFICADO: RestTemplate Bean + CORS desde env
+```
+
+---
+
+## S2-11. Pruebas unitarias Sprint 2
+
+| Archivo | Tipo | Pruebas | Qué cubre |
+|---|---|---|---|
+| `PruebasServicioTransaccion` | Unitaria | 7 | HU-03, HU-04, HU-05 con Mockito |
+
+### Casos cubiertos en `PruebasServicioTransaccion`
+
+**HU-03 Ingreso:** ingreso exitoso devuelve balance actualizado, categoría de otro cliente lanza FORBIDDEN, tipo no coincide con categoría lanza BAD_REQUEST, categoría inexistente lanza NOT_FOUND.
+
+**HU-04 Gasto:** gasto exitoso reduce el balance correctamente.
+
+**HU-05 Historial:** historial devuelve página con balance correcto, historial vacío devuelve balance en cero.
+
+**Total acumulado: 40 pruebas (33 Sprint 1 + 7 Sprint 2)**
+
+---
+
+## S2-12. Variables de entorno requeridas
+
+Con Supabase la URL de la BD ya no va en variables de entorno — está directa en el `application.yml`. Solo se necesitan:
+
+```bash
+export JWT_SECRET="ClaveSeguraLargaParaProduccion2024!"
+export N8N_WEBHOOK_VERIFICACION="https://djpa.app.n8n.cloud/webhook/verificacion-correo"
+export N8N_WEBHOOK_BIENVENIDA="https://djpa.app.n8n.cloud/webhook/bienvenida-correo"
+```
+
+Para que no se pierdan al cerrar la terminal, agregarlas a `~/.bashrc`:
+
+```bash
+echo 'export JWT_SECRET="ClaveSeguraLargaParaProduccion2024!"' >> ~/.bashrc
+echo 'export N8N_WEBHOOK_VERIFICACION="https://djpa.app.n8n.cloud/webhook/verificacion-correo"' >> ~/.bashrc
+echo 'export N8N_WEBHOOK_BIENVENIDA="https://djpa.app.n8n.cloud/webhook/bienvenida-correo"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+---
+
+## S2-13. Cómo ejecutar con Supabase
+
+```bash
+# 1. Definir variables de entorno
+export JWT_SECRET="ClaveSeguraLargaParaProduccion2024!"
+
+# 2. Correr el proyecto
+mvn spring-boot:run
+```
+
+Al iniciar se debe ver en los logs:
+```
+HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@...
+```
+
+Esto confirma que está conectado a Supabase. Si aparece `jdbc:h2:mem:` significa que el bloque H2 sigue activo en el `application.yml`.
+
+---
+
+## S2-14. Probar con Postman
+
+### Orden recomendado
+
+```
+1. POST /api/auth/registro           ← crea usuario + categorias iniciales automáticas
+2. Ver código en logs de Spring Boot
+3. POST /api/auth/verificar
+4. POST /api/auth/login              ← guarda el token con el script de Postman
+5. GET  /api/transacciones/categorias    ← ya aparecen las 7 categorias
+6. POST /api/transacciones           ← registrar ingreso (tipo: INGRESO)
+7. POST /api/transacciones           ← registrar gasto   (tipo: GASTO)
+8. GET  /api/transacciones/historial ← ver historial + balance
+```
+
+### Script para guardar el token automáticamente
+
+En el request de login → **Scripts → Post-response**:
+
+```javascript
+const json = pm.response.json();
+if (json.data && json.data.accessToken) {
+    pm.environment.set("token", json.data.accessToken);
+    console.log("Token guardado correctamente");
+}
+```
+
+En los endpoints de transacciones usar `Authorization: Bearer {{token}}`.
+
+### Ejemplo registrar ingreso
+
+```json
+{
+  "nombre": "Salario abril",
+  "monto": 3000000,
+  "movimientoEn": "2026-04-23T08:00:00",
+  "tipo": "INGRESO",
+  "idCategoria": 1
+}
+```
+
+### Ejemplo registrar gasto
+
+```json
+{
+  "nombre": "Almuerzo",
+  "monto": 15000,
+  "movimientoEn": "2026-04-23T12:30:00",
+  "tipo": "GASTO",
+  "idCategoria": 4
+}
+```
+
+### Pruebas de error
+
+**Monto vacío → 400:**
+```json
+{ "nombre": "Sin monto", "movimientoEn": "2026-04-23T08:00:00", "tipo": "INGRESO", "idCategoria": 1 }
+```
+
+**Sin token → 403:** quitar el Bearer Token del header.
+
+**Tipo no coincide con categoría → 400:** mandar `tipo: GASTO` con una categoría de `tipo: INGRESO`.
+
+---
+
+## S2-15. Decisiones de diseño Sprint 2
+
+**¿Por qué `ddl-auto: none` en vez de `update`?** Con `none` Spring no toca las tablas en absoluto — las usa exactamente como las creó el compañero de BD. Esto evita que JPA modifique columnas o constraints sin querer en producción.
+
+**¿Por qué el correo del usuario viene del JWT y no del body?** Si viniera en el body, un usuario podría poner el correo de otra persona y ver o crear datos ajenos. Al leerlo del token JWT se garantiza que solo se accede a los datos del usuario autenticado.
+
+**¿Por qué BigDecimal para el monto y no double?** `double` tiene errores de redondeo en operaciones financieras. `BigDecimal` con `NUMERIC(15,2)` en PostgreSQL garantiza precisión exacta hasta dos decimales.
+
+**¿Por qué COALESCE en la query de suma?** Si un usuario no tiene transacciones de un tipo, `SUM()` devuelve `NULL`. `COALESCE(SUM(...), 0)` garantiza que el balance siempre sea un número válido y no cause NullPointerException.
+
+**¿Por qué categorías iniciales automáticas?** Al registrarse, el usuario ya tiene categorías listas para empezar a registrar transacciones de inmediato sin tener que configurar nada.
+
+---
+
+---
 
 ---
 
@@ -870,5 +1475,5 @@ El backend envía la siguiente estructura JSON en el cuerpo de la petición:
 
 ---
 
-*Documentación del proyecto — Fabrica escuela 20*
+*Documentación del proyecto — Fábrica Escuela 2026-1 · Universidad de Antioquia*
 ```
