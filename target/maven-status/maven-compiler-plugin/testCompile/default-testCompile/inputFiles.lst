@@ -1,6 +1,9 @@
 /home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/compartido/PruebasUtilJwt.java
 /home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/compartido/PruebasGeneradorCodigo.java
+/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/dominio/PruebasCategoria.java
 /home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/aplicacion/PruebasServicioTransaccion.java
 /home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/PruebasAutenticacion.java
+/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/infraestructura/seguridad/PruebasFiltroJwt.java
+/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/dominio/PruebasTransaccion.java
 /home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/dominio/PruebasCodigoVerificacion.java
 /home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/aplicacion/PruebasServicioAutenticacion.java

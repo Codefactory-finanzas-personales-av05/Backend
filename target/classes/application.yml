@@ -45,8 +45,8 @@ app:
     origenes-permitidos: ${CORS_ORIGINS:http://localhost:3000,http://localhost:5173}
 
   n8n:
-    webhook-verificacion: ${N8N_WEBHOOK_VERIFICACION:http://localhost:5678/webhook-test/verificacion-correo}
-    webhook-bienvenida: ${N8N_WEBHOOK_BIENVENIDA:http://localhost:5678/webhook-test/bienvenida-correo}
+    webhook-verificacion: ${N8N_WEBHOOK_VERIFICACION:https://xion1407.app.n8n.cloud/webhook/verificacion-correo}
+    webhook-bienvenida: ${N8N_WEBHOOK_BIENVENIDA:https://xion1407.app.n8n.cloud/webhook/Bienvenida Correo}
 
 server:
   port: 8080

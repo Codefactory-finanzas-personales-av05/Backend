@@ -2,6 +2,7 @@ package com.finanzas.auth.aplicacion;
 
 import com.finanzas.auth.aplicacion.casosdeuso.ServicioTransaccion;
 import com.finanzas.auth.aplicacion.dto.peticion.PeticionTransaccion;
+import com.finanzas.auth.aplicacion.dto.respuesta.RespuestaCategoria;
 import com.finanzas.auth.aplicacion.dto.respuesta.RespuestaHistorial;
 import com.finanzas.auth.aplicacion.dto.respuesta.RespuestaTransaccion;
 import com.finanzas.auth.compartido.excepcion.ExcepcionAutenticacion;
@@ -28,7 +29,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("Pruebas unitarias del ServicioTransaccion")
+@DisplayName("Pruebas unitarias del ServicioTransaccion — HU-03, HU-04, HU-05")
 class PruebasServicioTransaccion {
 
     @Mock private PuertoRepositorioTransaccion repositorioTransaccion;
@@ -60,40 +61,46 @@ class PruebasServicioTransaccion {
 
     private PeticionTransaccion peticionIngreso() {
         return PeticionTransaccion.builder()
-                .nombre("Salario mensual").monto(new BigDecimal("3000000"))
-                .movimientoEn(LocalDateTime.now()).tipo(Transaccion.TipoTransaccion.INGRESO)
+                .nombre("Salario mensual")
+                .monto(new BigDecimal("3000000"))
+                .movimientoEn(LocalDateTime.now())
+                .tipo(Transaccion.TipoTransaccion.INGRESO)
                 .idCategoria(10L).build();
     }
 
     private PeticionTransaccion peticionGasto() {
         return PeticionTransaccion.builder()
-                .nombre("Almuerzo").monto(new BigDecimal("15000"))
-                .movimientoEn(LocalDateTime.now()).tipo(Transaccion.TipoTransaccion.GASTO)
+                .nombre("Almuerzo")
+                .monto(new BigDecimal("15000"))
+                .movimientoEn(LocalDateTime.now())
+                .tipo(Transaccion.TipoTransaccion.GASTO)
                 .idCategoria(20L).build();
     }
 
-    private Transaccion transaccionGuardada(PeticionTransaccion peticion, Long idCategoria) {
+    private Transaccion transaccionGuardada(PeticionTransaccion p, String nombreCat, String iconoCat) {
         return Transaccion.builder()
-                .id(100L).nombre(peticion.getNombre()).monto(peticion.getMonto())
-                .movimientoEn(peticion.getMovimientoEn()).tipo(peticion.getTipo())
-                .idCliente(1L).idCategoria(idCategoria)
-                .nombreCategoria("Salario").iconoCategoria("💼")
+                .id(100L).nombre(p.getNombre()).monto(p.getMonto())
+                .movimientoEn(p.getMovimientoEn()).tipo(p.getTipo())
+                .idCliente(1L).idCategoria(p.getIdCategoria())
+                .nombreCategoria(nombreCat).iconoCategoria(iconoCat)
                 .creadoEn(LocalDateTime.now()).build();
     }
 
     // ── HU-03: Registrar ingreso ──────────────────────────────────────────────
 
-    @Nested @DisplayName("HU-03 — Registrar ingreso")
+    @Nested
+    @DisplayName("HU-03 — Registrar ingreso")
     class RegistrarIngreso {
 
-        @Test @DisplayName("Ingreso exitoso devuelve la transaccion con balance actualizado")
+        @Test
+        @DisplayName("Ingreso exitoso devuelve la transaccion con balance actualizado")
         void ingresoExitoso_devuelveTransaccionYBalance() {
             when(repositorioUsuario.buscarPorCorreo("david@test.com"))
                     .thenReturn(Optional.of(usuarioActivo()));
             when(repositorioCategoria.buscarPorId(10L))
                     .thenReturn(Optional.of(categoriaIngreso()));
             when(repositorioTransaccion.guardar(any()))
-                    .thenReturn(transaccionGuardada(peticionIngreso(), 10L));
+                    .thenReturn(transaccionGuardada(peticionIngreso(), "Salario", "💼"));
             when(repositorioTransaccion.sumarMontosPorTipo(1L, Transaccion.TipoTransaccion.INGRESO))
                     .thenReturn(new BigDecimal("3000000"));
             when(repositorioTransaccion.sumarMontosPorTipo(1L, Transaccion.TipoTransaccion.GASTO))
@@ -104,14 +111,17 @@ class PruebasServicioTransaccion {
             assertNotNull(resultado);
             assertEquals(new BigDecimal("3000000"), resultado.getBalanceActual());
             assertEquals("INGRESO", resultado.getTipo());
+            assertEquals("Salario", resultado.getNombreCategoria());
             verify(repositorioTransaccion).guardar(any());
         }
 
-        @Test @DisplayName("Categoria de otro cliente lanza FORBIDDEN")
+        @Test
+        @DisplayName("Categoria de otro cliente lanza FORBIDDEN")
         void categoriaDeOtroCliente_lanzaForbidden() {
             Categoria categoriaAjena = Categoria.builder()
-                    .idCategoria(10L).nombre("Ajena").tipo(Categoria.TipoCategoria.INGRESO)
-                    .idCliente(99L).build();   // cliente diferente
+                    .idCategoria(10L).nombre("Ajena")
+                    .tipo(Categoria.TipoCategoria.INGRESO)
+                    .idCliente(99L).build();
 
             when(repositorioUsuario.buscarPorCorreo("david@test.com"))
                     .thenReturn(Optional.of(usuarioActivo()));
@@ -125,11 +135,12 @@ class PruebasServicioTransaccion {
             verify(repositorioTransaccion, never()).guardar(any());
         }
 
-        @Test @DisplayName("Tipo no coincide con categoria lanza BAD_REQUEST")
-        void tipoNoCoincide_lanzaBadRequest() {
-            // Intenta registrar un INGRESO en una categoria de GASTO
+        @Test
+        @DisplayName("Tipo no coincide con categoria lanza BAD_REQUEST")
+        void tipoNoCoincideConCategoria_lanzaBadRequest() {
+            // Intentar registrar INGRESO en una categoria de GASTO
             PeticionTransaccion peticionMal = PeticionTransaccion.builder()
-                    .nombre("Error").monto(new BigDecimal("1000"))
+                    .nombre("Error de tipo").monto(new BigDecimal("1000"))
                     .movimientoEn(LocalDateTime.now())
                     .tipo(Transaccion.TipoTransaccion.INGRESO)
                     .idCategoria(20L).build();
@@ -137,42 +148,48 @@ class PruebasServicioTransaccion {
             when(repositorioUsuario.buscarPorCorreo("david@test.com"))
                     .thenReturn(Optional.of(usuarioActivo()));
             when(repositorioCategoria.buscarPorId(20L))
-                    .thenReturn(Optional.of(categoriaGasto())); // tipo GASTO
+                    .thenReturn(Optional.of(categoriaGasto()));
 
             ExcepcionAutenticacion ex = assertThrows(ExcepcionAutenticacion.class,
                     () -> servicio.registrar(peticionMal, "david@test.com"));
 
             assertEquals(HttpStatus.BAD_REQUEST, ex.getEstado());
+            verify(repositorioTransaccion, never()).guardar(any());
         }
 
-        @Test @DisplayName("Categoria inexistente lanza NOT_FOUND")
+        @Test
+        @DisplayName("Categoria inexistente lanza NOT_FOUND")
         void categoriaInexistente_lanzaNotFound() {
             when(repositorioUsuario.buscarPorCorreo("david@test.com"))
                     .thenReturn(Optional.of(usuarioActivo()));
-            when(repositorioCategoria.buscarPorId(999L)).thenReturn(Optional.empty());
+            when(repositorioCategoria.buscarPorId(999L))
+                    .thenReturn(Optional.empty());
 
             PeticionTransaccion peticion = peticionIngreso();
             peticion.setIdCategoria(999L);
 
-            assertEquals(HttpStatus.NOT_FOUND,
-                    assertThrows(ExcepcionAutenticacion.class,
-                            () -> servicio.registrar(peticion, "david@test.com")).getEstado());
+            ExcepcionAutenticacion ex = assertThrows(ExcepcionAutenticacion.class,
+                    () -> servicio.registrar(peticion, "david@test.com"));
+
+            assertEquals(HttpStatus.NOT_FOUND, ex.getEstado());
         }
     }
 
     // ── HU-04: Registrar gasto ────────────────────────────────────────────────
 
-    @Nested @DisplayName("HU-04 — Registrar gasto")
+    @Nested
+    @DisplayName("HU-04 — Registrar gasto")
     class RegistrarGasto {
 
-        @Test @DisplayName("Gasto exitoso reduce el balance")
+        @Test
+        @DisplayName("Gasto exitoso reduce el balance correctamente")
         void gastoExitoso_reduceBalance() {
             when(repositorioUsuario.buscarPorCorreo("david@test.com"))
                     .thenReturn(Optional.of(usuarioActivo()));
             when(repositorioCategoria.buscarPorId(20L))
                     .thenReturn(Optional.of(categoriaGasto()));
             when(repositorioTransaccion.guardar(any()))
-                    .thenReturn(transaccionGuardada(peticionGasto(), 20L));
+                    .thenReturn(transaccionGuardada(peticionGasto(), "Comida", "🍔"));
             when(repositorioTransaccion.sumarMontosPorTipo(1L, Transaccion.TipoTransaccion.INGRESO))
                     .thenReturn(new BigDecimal("3000000"));
             when(repositorioTransaccion.sumarMontosPorTipo(1L, Transaccion.TipoTransaccion.GASTO))
@@ -183,23 +200,53 @@ class PruebasServicioTransaccion {
             assertNotNull(resultado);
             // balance = 3000000 - 15000 = 2985000
             assertEquals(new BigDecimal("2985000"), resultado.getBalanceActual());
+            assertEquals("GASTO", resultado.getTipo());
+            assertEquals("Comida", resultado.getNombreCategoria());
+        }
+
+        @Test
+        @DisplayName("Gasto en categoria de ingreso lanza BAD_REQUEST")
+        void gastoEnCategoriaIngreso_lanzaBadRequest() {
+            PeticionTransaccion peticionMal = PeticionTransaccion.builder()
+                    .nombre("Error").monto(new BigDecimal("5000"))
+                    .movimientoEn(LocalDateTime.now())
+                    .tipo(Transaccion.TipoTransaccion.GASTO)
+                    .idCategoria(10L).build();
+
+            when(repositorioUsuario.buscarPorCorreo("david@test.com"))
+                    .thenReturn(Optional.of(usuarioActivo()));
+            when(repositorioCategoria.buscarPorId(10L))
+                    .thenReturn(Optional.of(categoriaIngreso()));
+
+            ExcepcionAutenticacion ex = assertThrows(ExcepcionAutenticacion.class,
+                    () -> servicio.registrar(peticionMal, "david@test.com"));
+
+            assertEquals(HttpStatus.BAD_REQUEST, ex.getEstado());
         }
     }
 
     // ── HU-05: Historial ──────────────────────────────────────────────────────
 
-    @Nested @DisplayName("HU-05 — Historial paginado")
+    @Nested
+    @DisplayName("HU-05 — Historial paginado")
     class Historial {
 
-        @Test @DisplayName("Historial devuelve transacciones paginadas con balance")
+        @Test
+        @DisplayName("Historial devuelve transacciones paginadas con balance completo")
         void historial_devuelvePaginaConBalance() {
-            Transaccion t = Transaccion.builder()
+            Transaccion t1 = Transaccion.builder()
                     .id(1L).nombre("Salario").monto(new BigDecimal("3000000"))
                     .movimientoEn(LocalDateTime.now())
                     .tipo(Transaccion.TipoTransaccion.INGRESO)
                     .idCliente(1L).nombreCategoria("Salario").iconoCategoria("💼").build();
 
-            Page<Transaccion> pagina = new PageImpl<>(List.of(t));
+            Transaccion t2 = Transaccion.builder()
+                    .id(2L).nombre("Almuerzo").monto(new BigDecimal("15000"))
+                    .movimientoEn(LocalDateTime.now().minusHours(2))
+                    .tipo(Transaccion.TipoTransaccion.GASTO)
+                    .idCliente(1L).nombreCategoria("Comida").iconoCategoria("🍔").build();
+
+            Page<Transaccion> pagina = new PageImpl<>(List.of(t1, t2));
 
             when(repositorioUsuario.buscarPorCorreo("david@test.com"))
                     .thenReturn(Optional.of(usuarioActivo()));
@@ -208,18 +255,20 @@ class PruebasServicioTransaccion {
             when(repositorioTransaccion.sumarMontosPorTipo(1L, Transaccion.TipoTransaccion.INGRESO))
                     .thenReturn(new BigDecimal("3000000"));
             when(repositorioTransaccion.sumarMontosPorTipo(1L, Transaccion.TipoTransaccion.GASTO))
-                    .thenReturn(BigDecimal.ZERO);
+                    .thenReturn(new BigDecimal("15000"));
 
             RespuestaHistorial resultado = servicio.obtenerHistorial("david@test.com", 0, 10);
 
             assertNotNull(resultado);
-            assertEquals(1, resultado.getTransacciones().size());
+            assertEquals(2, resultado.getTransacciones().size());
             assertEquals(new BigDecimal("3000000"), resultado.getTotalIngresos());
-            assertEquals(BigDecimal.ZERO, resultado.getTotalGastos());
-            assertEquals(new BigDecimal("3000000"), resultado.getBalanceActual());
+            assertEquals(new BigDecimal("15000"), resultado.getTotalGastos());
+            assertEquals(new BigDecimal("2985000"), resultado.getBalanceActual());
+            assertEquals(0, resultado.getPaginaActual());
         }
 
-        @Test @DisplayName("Historial vacio devuelve balance en cero")
+        @Test
+        @DisplayName("Historial vacio devuelve balance en cero")
         void historialVacio_balanceEnCero() {
             when(repositorioUsuario.buscarPorCorreo("david@test.com"))
                     .thenReturn(Optional.of(usuarioActivo()));
@@ -232,6 +281,68 @@ class PruebasServicioTransaccion {
 
             assertTrue(resultado.getTransacciones().isEmpty());
             assertEquals(BigDecimal.ZERO, resultado.getBalanceActual());
+            assertEquals(BigDecimal.ZERO, resultado.getTotalIngresos());
+            assertEquals(BigDecimal.ZERO, resultado.getTotalGastos());
+        }
+
+        @Test
+        @DisplayName("Historial paginado respeta el tamano de pagina")
+        void historial_respetaTamanoPagina() {
+            when(repositorioUsuario.buscarPorCorreo("david@test.com"))
+                    .thenReturn(Optional.of(usuarioActivo()));
+            when(repositorioTransaccion.buscarPorIdCliente(eq(1L), any()))
+                    .thenReturn(new PageImpl<>(List.of()));
+            when(repositorioTransaccion.sumarMontosPorTipo(any(), any()))
+                    .thenReturn(BigDecimal.ZERO);
+
+            servicio.obtenerHistorial("david@test.com", 0, 5);
+
+            // Verifica que se llama con pageable de tamano 5
+            ArgumentCaptor<org.springframework.data.domain.Pageable> captor =
+                    ArgumentCaptor.forClass(org.springframework.data.domain.Pageable.class);
+            verify(repositorioTransaccion).buscarPorIdCliente(eq(1L), captor.capture());
+            assertEquals(5, captor.getValue().getPageSize());
+        }
+    }
+
+    // ── Categorias ────────────────────────────────────────────────────────────
+
+    @Nested
+    @DisplayName("Categorias del cliente")
+    class Categorias {
+
+        @Test
+        @DisplayName("Devuelve lista de categorias del cliente autenticado")
+        void obtenerCategorias_devuelveListaDelCliente() {
+            List<Categoria> lista = List.of(
+                    categoriaIngreso(),
+                    categoriaGasto()
+            );
+
+            when(repositorioUsuario.buscarPorCorreo("david@test.com"))
+                    .thenReturn(Optional.of(usuarioActivo()));
+            when(repositorioCategoria.buscarPorIdCliente(1L))
+                    .thenReturn(lista);
+
+            List<RespuestaCategoria> resultado = servicio.obtenerCategorias("david@test.com");
+
+            assertEquals(2, resultado.size());
+            assertEquals("Salario", resultado.get(0).getNombre());
+            assertEquals("INGRESO", resultado.get(0).getTipo());
+            assertEquals("Comida", resultado.get(1).getNombre());
+            assertEquals("GASTO", resultado.get(1).getTipo());
+        }
+
+        @Test
+        @DisplayName("Usuario inexistente lanza UNAUTHORIZED")
+        void usuarioInexistente_lanzaUnauthorized() {
+            when(repositorioUsuario.buscarPorCorreo("noexiste@test.com"))
+                    .thenReturn(Optional.empty());
+
+            ExcepcionAutenticacion ex = assertThrows(ExcepcionAutenticacion.class,
+                    () -> servicio.obtenerCategorias("noexiste@test.com"));
+
+            assertEquals(HttpStatus.UNAUTHORIZED, ex.getEstado());
         }
     }
 }

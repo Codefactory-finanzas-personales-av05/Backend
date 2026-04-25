@@ -109,10 +109,23 @@
     </dependencies>
 
     <build>
+
+        
         <plugins>
-            <!-- JaCoCo para reporte de cobertura de pruebas -->
-            <!-- Ejecutar con: mvn test jacoco:report -->
-            <!-- El reporte queda en: target/site/jacoco/index.html -->
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <includes>
+                        <include>**/Pruebas*.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            
+            
+            
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>

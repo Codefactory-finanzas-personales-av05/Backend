@@ -1,4 +1,8 @@
+com/finanzas/auth/aplicacion/PruebasServicioTransaccion$Categorias.class
 com/finanzas/auth/aplicacion/PruebasServicioTransaccion$Historial.class
+com/finanzas/auth/dominio/PruebasCategoria.class
+com/finanzas/auth/infraestructura/seguridad/PruebasFiltroJwt.class
 com/finanzas/auth/aplicacion/PruebasServicioTransaccion$RegistrarIngreso.class
+com/finanzas/auth/dominio/PruebasTransaccion.class
 com/finanzas/auth/aplicacion/PruebasServicioTransaccion$RegistrarGasto.class
 com/finanzas/auth/aplicacion/PruebasServicioTransaccion.class
