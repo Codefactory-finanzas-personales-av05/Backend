@@ -965,7 +965,7 @@ La conexión está configurada directamente en `application.yml`:
 ```yaml
 spring:
   datasource:
-    url: jdbc:postgresql://aws-1-us-west-2.pooler.supabase.com:6543/postgres?user=postgres.wfgbepodmukcfupozmaa&password=KWiif9Ah_j/Tth5
+    url: jdbc:postgresql://[tu-host-de-supabase]:5432/postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -977,11 +977,11 @@ spring:
 
 | Campo | Valor |
 |---|---|
-| **Host** | `aws-1-us-west-2.pooler.supabase.com` |
-| **Port** | `6543` |
-| **Database** | `postgres` |
-| **Username** | `postgres.wfgbepodmukcfupozmaa` |
-| **Password** | `KWiif9Ah_j/Tth5` |
+| **Host** |  |
+| **Port** | |
+| **Database** | |
+| **Username** |  |
+| **Password** | |
 
 ### Cambios aplicados en Supabase por el equipo de BD
 
@@ -1390,17 +1390,17 @@ Transacción de ingreso se construye correctamente, transacción de gasto tiene 
 Con Supabase la URL de la BD ya no va en variables de entorno — está directa en el `application.yml`. Solo se necesitan:
 
 ```bash
-export JWT_SECRET="ClaveSeguraLargaParaProduccion2024!"
-export N8N_WEBHOOK_VERIFICACION="https://djpa.app.n8n.cloud/webhook/verificacion-correo"
-export N8N_WEBHOOK_BIENVENIDA="https://djpa.app.n8n.cloud/webhook/bienvenida-correo"
+export JWT_SECRET="Tu_Clave_Secreta_Local"
+export N8N_WEBHOOK_VERIFICACION="https://[tu-instancia].app.n8n.cloud/webhook/verificacion-correo"
+export N8N_WEBHOOK_BIENVENIDA="https://[tu-instancia].app.n8n.cloud/webhook/bienvenida-correo"
 ```
 
 Para que no se pierdan al cerrar la terminal, agregarlas a `~/.bashrc`:
 
 ```bash
-echo 'export JWT_SECRET="ClaveSeguraLargaParaProduccion2024!"' >> ~/.bashrc
-echo 'export N8N_WEBHOOK_VERIFICACION="https://djpa.app.n8n.cloud/webhook/verificacion-correo"' >> ~/.bashrc
-echo 'export N8N_WEBHOOK_BIENVENIDA="https://djpa.app.n8n.cloud/webhook/bienvenida-correo"' >> ~/.bashrc
+echo 'export JWT_SECRET="Tu_Clave_Secreta_Local"' >> ~/.bashrc
+echo 'export N8N_WEBHOOK_VERIFICACION="https://[tu-instancia].app.n8n.cloud/webhook/verificacion-correo"' >> ~/.bashrc
+echo 'export N8N_WEBHOOK_BIENVENIDA="https://[tu-instancia].app.n8n.cloud/webhook/bienvenida-correo"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
