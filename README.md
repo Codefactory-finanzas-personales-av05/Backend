@@ -1410,7 +1410,7 @@ source ~/.bashrc
 
 ```bash
 # 1. Definir variables de entorno
-export JWT_SECRET="ClaveSeguraLargaParaProduccion2024!"
+export JWT_SECRET="Tu_Clave_Secreta_Local"
 
 # 2. Correr el proyecto
 mvn spring-boot:run
