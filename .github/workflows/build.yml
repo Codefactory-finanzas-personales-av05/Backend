@@ -20,7 +20,5 @@ jobs:
           java-version: '17'
 
       - name: Run Tests
-
-        working-directory: Backend
         run: mvn clean test
 
