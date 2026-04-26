@@ -129,7 +129,6 @@ jobs:
           target: "~/app/"
           strip_components: 1
 
-      # Ejecutar en EC2
       - name: Run JAR in EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -137,18 +136,17 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            # matar proceso anterior si existe
-            pkill -f "java -jar" || true
-
-            # crear carpeta si no existe
+            # 1. Matar el proceso que esté usando el puerto 8080 (más efectivo que pkill)
+            sudo fuser -k 8080/tcp || true
+            
+            # 2. Asegurar que la carpeta existe
             mkdir -p ~/app
-
+            cd ~/app
             
-            # - Usamos la ruta completa al JAR
-            # - Redirigimos salida a app.log
-            # - 'disown' asegura que el proceso no muera al cerrar el SSH
-            BUILD_ID=dontKillMe nohup java -jar ~/app/*.jar > ~/app/app.log 2>&1 & 
+            # 3. EL TRUCO: Usar un subshell (parentesis) y desvincular la salida estándar
+            # Esto evita que el SSH se quede esperando y luego mate el proceso
+            (nohup java -jar *.jar > app.log 2>&1 &)
+            
+            # 4. Darle un momento para iniciar y verificar
             sleep 5
-            
-            # 4. Verificar si arrancó (opcional pero recomendado)
-            ps -ef | grep java
+            pgrep -f java && echo "App is running!" || echo "App failed to start"
