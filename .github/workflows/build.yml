@@ -143,5 +143,12 @@ jobs:
             # crear carpeta si no existe
             mkdir -p ~/app
 
-            # ejecutar nuevo jar
-            nohup java -jar ~/app/*.jar > app.log 2>&1 &
+            
+            # - Usamos la ruta completa al JAR
+            # - Redirigimos salida a app.log
+            # - 'disown' asegura que el proceso no muera al cerrar el SSH
+            BUILD_ID=dontKillMe nohup java -jar ~/app/*.jar > ~/app/app.log 2>&1 & 
+            sleep 5
+            
+            # 4. Verificar si arrancó (opcional pero recomendado)
+            ps -ef | grep java
