@@ -136,17 +136,27 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            # 1. Matar el proceso que esté usando el puerto 8080 (más efectivo que pkill)
-            sudo fuser -k 8080/tcp || true
-            
-            # 2. Asegurar que la carpeta existe
+            # 1. Crear carpeta si no existe
             mkdir -p ~/app
             cd ~/app
-            
-            # 3. EL TRUCO: Usar un subshell (parentesis) y desvincular la salida estándar
-            # Esto evita que el SSH se quede esperando y luego mate el proceso
-            (nohup java -jar *.jar > app.log 2>&1 &)
-            
-            # 4. Darle un momento para iniciar y verificar
+
+            # 2. Arreglar permisos (CLAVE)
+            sudo chown -R $USER:$USER ~/app
+
+            # 3. Matar proceso en 8080
+            sudo fuser -k 8080/tcp || true
+
+            # 4. Limpiar logs viejos
+            rm -f app.log
+
+            # 5. Seleccionar el JAR correcto
+            JAR=$(ls *.jar | head -n 1)
+
+            # 6. Ejecutar app
+            nohup java -jar "$JAR" > app.log 2>&1 &
+
+            # 7. Esperar arranque
             sleep 5
-            pgrep -f java && echo "App is running!" || echo "App failed to start"
+
+            # 8. Verificar proceso
+            pgrep -f "$JAR" && echo "App is running!" || echo "App failed to start"
