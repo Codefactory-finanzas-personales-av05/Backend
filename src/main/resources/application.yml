@@ -1,18 +1,12 @@
 spring:
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/test}
-    username: ${DB_USER:test}
-    password: ${DB_PASS:test}
+    url: ${DB_URL}
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-
-server:
-  port: 8080
-  address: 0.0.0.0
 
 app:
   jwt:
@@ -20,8 +14,8 @@ app:
     expiration-ms: 86400000
 
   n8n:
-    webhook-verificacion: ${N8N_WEBHOOK_VERIFICACION:http://localhost}
-    webhook-bienvenida: ${N8N_WEBHOOK_BIENVENIDA:http://localhost}
+    webhook-verificacion: ${N8N_WEBHOOK_VERIFICACION}
+    webhook-bienvenida: ${N8N_WEBHOOK_BIENVENIDA}
 
   cors:
     origenes-permitidos: ${CORS_ORIGINS:http://localhost:3000}
