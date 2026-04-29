@@ -23,8 +23,6 @@ jobs:
         run: mvn clean test
 
 
-
-
 # Sonar's Job
   sonar:
     # Depende del job de tests
