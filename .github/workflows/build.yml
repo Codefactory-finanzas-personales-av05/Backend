@@ -146,7 +146,6 @@ jobs:
     
             JAR=$(ls *.jar | head -n 1)
     
-            # 🔥 VARIABLES DE ENTORNO (LO QUE TE FALTABA)
             export DB_URL="${{ secrets.DB_URL }}"
             export JWT_SECRET="${{ secrets.JWT_SECRET }}"
             export N8N_WEBHOOK_VERIFICACION="${{ secrets.N8N_WEBHOOK_VERIFICACION }}"
