@@ -138,23 +138,22 @@ jobs:
           script: |
             mkdir -p ~/app
             cd ~/app
-    
-            sudo chown -R $USER:$USER ~/app
+
             sudo fuser -k 8080/tcp || true
-    
+
             rm -f app.log
-    
+
             JAR=$(ls *.jar | head -n 1)
-    
-            export DB_URL="${{ secrets.DB_URL }}"
-            export JWT_SECRET="${{ secrets.JWT_SECRET }}"
-            export N8N_WEBHOOK_VERIFICACION="${{ secrets.N8N_WEBHOOK_VERIFICACION }}"
-            export N8N_WEBHOOK_BIENVENIDA="${{ secrets.N8N_WEBHOOK_BIENVENIDA }}"
-    
-            # 🚀 Ejecutar app
+
+            DB_URL='${{ secrets.DB_URL }}' \
+            DB_USER='${{ secrets.DB_USER }}' \
+            DB_PASSWORD='${{ secrets.DB_PASSWORD }}' \
+            JWT_SECRET='${{ secrets.JWT_SECRET }}' \
+            CORS_ORIGINS='${{ secrets.CORS_ORIGINS }}' \
+            N8N_WEBHOOK_VERIFICACION='${{ secrets.N8N_WEBHOOK_VERIFICACION }}' \
+            N8N_WEBHOOK_BIENVENIDA='${{ secrets.N8N_WEBHOOK_BIENVENIDA }}' \
             nohup java -jar "$JAR" > app.log 2>&1 &
-    
+
             sleep 10
-    
-            # Verificar
+
             pgrep -f "$JAR" && echo "App is running!" || (echo "App failed"; tail -n 50 app.log)
