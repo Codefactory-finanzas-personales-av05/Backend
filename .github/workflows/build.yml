@@ -4,7 +4,7 @@ name: CI/CD Pipeline
 
 jobs:on:
   push:
-    branches: [ "main", "feature/**" ]
+    branches: [ "feature/**" ]
   tests:
     runs-on: ubuntu-latest
 
