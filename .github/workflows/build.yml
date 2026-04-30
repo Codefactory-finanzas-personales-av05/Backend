@@ -2,9 +2,12 @@ name: CI/CD Pipeline
 
 
 
-jobs:on:
+
+on:
   push:
-    branches: [ "feature/**" ]
+    branches: [ "main", "feature/**" ]
+
+jobs:
   tests:
     runs-on: ubuntu-latest
 
