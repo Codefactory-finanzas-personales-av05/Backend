@@ -26,6 +26,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.finanzas.auth.dominio.modelo.Categoria;        
+import com.finanzas.auth.dominio.puertos.salida.PuertoRepositorioCategoria;                                                             
+import java.util.List;  
+
 import java.time.LocalDateTime;
 
 @Service
@@ -39,6 +43,7 @@ public class ServicioAutenticacion implements CasoDeUsoAutenticacion {
     private final PuertoCorreo servicioCorreo;
     private final PasswordEncoder codificadorContrasena;
     private final UtilJwt utilJwt;
+    private final PuertoRepositorioCategoria repositorioCategoria;
 
     @Value("${app.verificacion.minutos-expiracion:15}")
     private int minutosExpiracion;
@@ -69,6 +74,7 @@ public class ServicioAutenticacion implements CasoDeUsoAutenticacion {
                 .descripcion("")
                 .build();
         clienteNuevo = repositorioCliente.guardar(clienteNuevo);
+         crearCategoriasIniciales(clienteNuevo.getIdCliente())
 
         Usuario nuevoUsuario = Usuario.builder()
                 .correo(peticion.getCorreo())
@@ -256,5 +262,19 @@ public class ServicioAutenticacion implements CasoDeUsoAutenticacion {
         return repositorioUsuario.buscarPorCorreo(correo)
                 .orElseThrow(() -> new ExcepcionAutenticacion(
                         "Usuario o contrasena incorrectos", HttpStatus.UNAUTHORIZED));
+
+        
     }
+
+    private void crearCategoriasIniciales(Long idCliente) {
+      List.of(
+          Categoria.builder().nombre("Salario").icono("💼").tipo(Categoria.TipoCategoria.INGRESO).idCliente(idCliente).build(),
+          Categoria.builder().nombre("Freelance").icono("💻").tipo(Categoria.TipoCategoria.INGRESO).idCliente(idCliente).build(),
+          Categoria.builder().nombre("Otros ingresos").icono("💰").tipo(Categoria.TipoCategoria.INGRESO).idCliente(idCliente).build(),
+          Categoria.builder().nombre("Comida").icono("🍔").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build(),
+          Categoria.builder().nombre("Transporte").icono("🚌").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build(),
+          Categoria.builder().nombre("Servicios").icono("💡").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build(),
+          Categoria.builder().nombre("Entretenimiento").icono("🎮").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build()
+      ).forEach(repositorioCategoria::guardar);
+  }
 }
