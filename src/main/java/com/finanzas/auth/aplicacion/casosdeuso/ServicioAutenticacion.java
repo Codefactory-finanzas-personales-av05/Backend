@@ -74,7 +74,7 @@ public class ServicioAutenticacion implements CasoDeUsoAutenticacion {
                 .descripcion("")
                 .build();
         clienteNuevo = repositorioCliente.guardar(clienteNuevo);
-         crearCategoriasIniciales(clienteNuevo.getIdCliente())
+        crearCategoriasIniciales(clienteNuevo.getIdCliente());
 
         Usuario nuevoUsuario = Usuario.builder()
                 .correo(peticion.getCorreo())
@@ -267,19 +267,21 @@ public class ServicioAutenticacion implements CasoDeUsoAutenticacion {
     }
 
     private void crearCategoriasIniciales(Long idCliente) {
-      List.of(                                                                                                                                                                                      
-  Categoria.builder().nombre("Salario").icono("\uD83D\uDCBC").tipo(Categoria.TipoCategoria.INGRESO).idCliente(idCliente).build(),
+      guardarCategoria("Salario",         0x1F4BC, Categoria.TipoCategoria.INGRESO, idCliente);
+      guardarCategoria("Freelance",       0x1F4BB, Categoria.TipoCategoria.INGRESO, idCliente);
+      guardarCategoria("Otros ingresos",  0x1F4B0, Categoria.TipoCategoria.INGRESO, idCliente);
+      guardarCategoria("Comida",          0x1F354, Categoria.TipoCategoria.GASTO,   idCliente);
+      guardarCategoria("Transporte",      0x1F68C, Categoria.TipoCategoria.GASTO,   idCliente);
+      guardarCategoria("Servicios",       0x1F4A1, Categoria.TipoCategoria.GASTO,   idCliente);
+      guardarCategoria("Entretenimiento", 0x1F3AE, Categoria.TipoCategoria.GASTO,   idCliente);
+  }
 
-  Categoria.builder().nombre("Freelance").icono("\uD83D\uDCBB").tipo(Categoria.TipoCategoria.INGRESO).idCliente(idCliente).build(),
-          Categoria.builder().nombre("Otros
-  ingresos").icono("\uD83D\uDCB0").tipo(Categoria.TipoCategoria.INGRESO).idCliente(idCliente).build(),
-          Categoria.builder().nombre("Comida").icono("\uD83C\uDF54").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build(),
-
-  Categoria.builder().nombre("Transporte").icono("\uD83D\uDE8C").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build(),
-
-  Categoria.builder().nombre("Servicios").icono("\uD83D\uDCA1").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build(),
-
-  Categoria.builder().nombre("Entretenimiento").icono("\uD83C\uDFAE").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build()
-      ).forEach(repositorioCategoria::guardar);
+  private void guardarCategoria(String nombre, int codigoIcono, Categoria.TipoCategoria tipo, Long idCliente) {
+      repositorioCategoria.guardar(Categoria.builder()
+          .nombre(nombre)
+          .icono(new String(Character.toChars(codigoIcono)))
+          .tipo(tipo)
+          .idCliente(idCliente)
+          .build());
   }
 }
