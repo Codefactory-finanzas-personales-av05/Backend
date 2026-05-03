@@ -267,14 +267,19 @@ public class ServicioAutenticacion implements CasoDeUsoAutenticacion {
     }
 
     private void crearCategoriasIniciales(Long idCliente) {
-      List.of(
-          Categoria.builder().nombre("Salario").icono("💼").tipo(Categoria.TipoCategoria.INGRESO).idCliente(idCliente).build(),
-          Categoria.builder().nombre("Freelance").icono("💻").tipo(Categoria.TipoCategoria.INGRESO).idCliente(idCliente).build(),
-          Categoria.builder().nombre("Otros ingresos").icono("💰").tipo(Categoria.TipoCategoria.INGRESO).idCliente(idCliente).build(),
-          Categoria.builder().nombre("Comida").icono("🍔").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build(),
-          Categoria.builder().nombre("Transporte").icono("🚌").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build(),
-          Categoria.builder().nombre("Servicios").icono("💡").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build(),
-          Categoria.builder().nombre("Entretenimiento").icono("🎮").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build()
+      List.of(                                                                                                                                                                                      
+  Categoria.builder().nombre("Salario").icono("\uD83D\uDCBC").tipo(Categoria.TipoCategoria.INGRESO).idCliente(idCliente).build(),
+
+  Categoria.builder().nombre("Freelance").icono("\uD83D\uDCBB").tipo(Categoria.TipoCategoria.INGRESO).idCliente(idCliente).build(),
+          Categoria.builder().nombre("Otros
+  ingresos").icono("\uD83D\uDCB0").tipo(Categoria.TipoCategoria.INGRESO).idCliente(idCliente).build(),
+          Categoria.builder().nombre("Comida").icono("\uD83C\uDF54").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build(),
+
+  Categoria.builder().nombre("Transporte").icono("\uD83D\uDE8C").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build(),
+
+  Categoria.builder().nombre("Servicios").icono("\uD83D\uDCA1").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build(),
+
+  Categoria.builder().nombre("Entretenimiento").icono("\uD83C\uDFAE").tipo(Categoria.TipoCategoria.GASTO).idCliente(idCliente).build()
       ).forEach(repositorioCategoria::guardar);
   }
 }
