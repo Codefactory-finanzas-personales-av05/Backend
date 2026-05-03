@@ -33,6 +33,7 @@ class PruebasServicioAutenticacion {
     @Mock private PuertoCorreo servicioCorreo;
     @Mock private PasswordEncoder codificadorContrasena;
     @Mock private UtilJwt utilJwt;
+    @Mock private PuertoRepositorioCategoria repositorioCategoria;
 
     @InjectMocks
     private ServicioAutenticacion servicio;
