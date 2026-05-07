@@ -31,7 +31,12 @@ public class ConfiguracionSeguridad {
         "/api/auth/login",
         "/api/auth/reenviar-codigo",
         "/h2-console/**",
-        "/actuator/health"
+        "/actuator/health",
+
+        //Swagger
+        "/v3/api-docs/**",
+        "/swagger-ui/**",
+        "/swagger-ui.html"
     };
 
     @Bean
