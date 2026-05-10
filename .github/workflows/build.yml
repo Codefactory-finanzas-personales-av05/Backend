@@ -72,6 +72,7 @@ jobs:
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
             -Dsonar.organization=${{ vars.SONAR_ORG }} \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.branch.name=main \
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
             -Dsonar.exclusions=**/FinanceAuthApplication.java
         env:
