@@ -33,7 +33,6 @@ public class ConfiguracionSeguridad {
         "/h2-console/**",
         "/actuator/health",
 
-        //Swagger
         "/v3/api-docs/**",
         "/swagger-ui/**",
         "/swagger-ui.html"
@@ -47,7 +46,6 @@ public class ConfiguracionSeguridad {
                 sesion.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(ENDPOINTS_PUBLICOS).permitAll()
-                // /api/auth/descripcion y todo /api/transacciones/** requieren JWT
                 .anyRequest().authenticated()
             )
             .addFilterBefore(filtroJwt, UsernamePasswordAuthenticationFilter.class)
