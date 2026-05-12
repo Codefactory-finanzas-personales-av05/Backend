@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Pruebas unitarias del modelo Transaccion")
-class PruebasTransaccion {
+class TransaccionTest {
 
     @Test
     @DisplayName("Transaccion de ingreso se construye correctamente")

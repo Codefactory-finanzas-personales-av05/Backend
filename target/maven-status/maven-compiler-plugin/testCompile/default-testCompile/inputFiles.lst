@@ -1,9 +1,9 @@
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/compartido/PruebasUtilJwt.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/compartido/PruebasGeneradorCodigo.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/dominio/PruebasCategoria.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/aplicacion/PruebasServicioTransaccion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/PruebasAutenticacion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/infraestructura/seguridad/PruebasFiltroJwt.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/dominio/PruebasTransaccion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/dominio/PruebasCodigoVerificacion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/aplicacion/PruebasServicioAutenticacion.java
+C:\Workspace\Codefactory-finanzas-personales-av05\Backend\src\test\java\com\finanzas\auth\compartido\GeneradorCodigoTest.java
+C:\Workspace\Codefactory-finanzas-personales-av05\Backend\src\test\java\com\finanzas\auth\compartido\UtilJwtTest.java
+C:\Workspace\Codefactory-finanzas-personales-av05\Backend\src\test\java\com\finanzas\auth\dominio\CategoriaTest.java
+C:\Workspace\Codefactory-finanzas-personales-av05\Backend\src\test\java\com\finanzas\auth\AutenticacionTest.java
+C:\Workspace\Codefactory-finanzas-personales-av05\Backend\src\test\java\com\finanzas\auth\dominio\CodigoVerificacionTest.java
+C:\Workspace\Codefactory-finanzas-personales-av05\Backend\src\test\java\com\finanzas\auth\infraestructura\seguridad\FiltroJwtTest.java
+C:\Workspace\Codefactory-finanzas-personales-av05\Backend\src\test\java\com\finanzas\auth\aplicacion\ServicioAutenticacionTest.java
+C:\Workspace\Codefactory-finanzas-personales-av05\Backend\src\test\java\com\finanzas\auth\aplicacion\ServicioTransaccionTest.java
+C:\Workspace\Codefactory-finanzas-personales-av05\Backend\src\test\java\com\finanzas\auth\dominio\TransaccionTest.java

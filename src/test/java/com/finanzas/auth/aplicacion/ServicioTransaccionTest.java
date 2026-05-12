@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Pruebas unitarias del ServicioTransaccion — HU-03, HU-04, HU-05")
-class PruebasServicioTransaccion {
+class ServicioTransaccionTest {
 
     @Mock private PuertoRepositorioTransaccion repositorioTransaccion;
     @Mock private PuertoRepositorioCategoria repositorioCategoria;

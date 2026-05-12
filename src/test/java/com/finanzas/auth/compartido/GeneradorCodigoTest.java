@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * No necesita Spring, es una clase utilitaria pura.
  */
 @DisplayName("Pruebas del GeneradorCodigo")
-class PruebasGeneradorCodigo {
+class GeneradorCodigoTest {
 
     @Test
     @DisplayName("Codigo generado debe tener exactamente 6 digitos")

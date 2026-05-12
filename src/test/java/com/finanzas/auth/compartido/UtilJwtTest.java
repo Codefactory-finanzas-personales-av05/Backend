@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @DisplayName("Pruebas del UtilJwt")
-class PruebasUtilJwt {
+class UtilJwtTest {
 
     @Autowired
     private UtilJwt utilJwt;

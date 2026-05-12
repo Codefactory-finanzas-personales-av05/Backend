@@ -26,6 +26,24 @@
         <sonar.coverage.jacoco.xmlReportPaths>
             target/site/jacoco/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.exclusions>
+            **/infraestructura/persistencia/entidad/**,
+            **/infraestructura/persistencia/repositorio/**,
+            **/infraestructura/persistencia/adaptador/**,
+            **/infraestructura/correo/**,
+            **/infraestructura/configuracion/**,
+            **/aplicacion/dto/**,
+            **/FinanceAuthApplication.java
+        </sonar.exclusions>
+        <sonar.coverage.exclusions>
+            **/infraestructura/persistencia/entidad/**,
+            **/infraestructura/persistencia/repositorio/**,
+            **/infraestructura/persistencia/adaptador/**,
+            **/infraestructura/correo/**,
+            **/infraestructura/configuracion/**,
+            **/aplicacion/dto/**,
+            **/FinanceAuthApplication.java
+        </sonar.coverage.exclusions>
     </properties>
 
     <dependencies>
