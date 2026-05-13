@@ -68,3 +68,24 @@ describe('api.historial', () => {
     );
   });
 });
+
+describe('api.verificar', () => {
+  it('debería llamar al endpoint /verificar con método POST', async () => {
+    await api.verificar({ correo: 'a@b.com', codigo: '123456' });
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.stringContaining('/verificar'),
+      expect.objectContaining({ method: 'POST' })
+    );
+  });
+});
+
+describe('api.registrarTransaccion', () => {
+  it('debería enviar el body de la transacción con método POST', async () => {
+    const body = { nombre: 'Café', monto: 5000, movimientoEn: '2026-05-12T10:00:00', tipo: 'GASTO' as const, idCategoria: 4 };
+    await api.registrarTransaccion('token', body);
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.objectContaining({ method: 'POST', body: JSON.stringify(body) })
+    );
+  });
+});
