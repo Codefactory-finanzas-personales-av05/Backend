@@ -1,10 +1,12 @@
 com\finanzas\auth\dominio\CodigoVerificacionTest.class
 com\finanzas\auth\compartido\GeneradorCodigoTest.class
+com\finanzas\auth\compartido\excepcion\ManejadorExcepcionesTest.class
 com\finanzas\auth\infraestructura\seguridad\FiltroJwtTest.class
 com\finanzas\auth\aplicacion\ServicioAutenticacionTest$Reenvio.class
 com\finanzas\auth\aplicacion\ServicioAutenticacionTest$Registro.class
 com\finanzas\auth\aplicacion\ServicioTransaccionTest.class
 com\finanzas\auth\aplicacion\ServicioAutenticacionTest$Login.class
+com\finanzas\auth\infraestructura\web\ControladorAutenticacionTest.class
 com\finanzas\auth\aplicacion\ServicioTransaccionTest$Historial.class
 com\finanzas\auth\aplicacion\ServicioTransaccionTest$RegistrarGasto.class
 com\finanzas\auth\compartido\UtilJwtTest.class
@@ -13,6 +15,8 @@ com\finanzas\auth\aplicacion\ServicioTransaccionTest$Categorias.class
 com\finanzas\auth\aplicacion\ServicioAutenticacionTest$Verificacion.class
 com\finanzas\auth\aplicacion\ServicioAutenticacionTest.class
 com\finanzas\auth\AutenticacionTest.class
+com\finanzas\auth\dominio\UsuarioTest.class
 com\finanzas\auth\dominio\TransaccionTest.class
 com\finanzas\auth\aplicacion\ServicioAutenticacionTest$Descripcion.class
+com\finanzas\auth\infraestructura\web\ControladorTransaccionTest.class
 com\finanzas\auth\aplicacion\ServicioTransaccionTest$RegistrarIngreso.class

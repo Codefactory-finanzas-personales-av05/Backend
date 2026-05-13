@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\rolle\\\\Desktop\\\\Backend\" -Recurse)",
+      "Bash(Select-Object Name, FullName)",
+      "Bash(Format-List)",
+      "Bash(./mvnw test *)",
+      "Bash(mvn --version)",
+      "Bash(mvn test *)",
+      "Bash(java -version)",
+      "Read(//c/Program Files/Java/**)",
+      "Read(//c/Program Files/**)",
+      "Bash(mvn dependency:resolve -q)",
+      "Bash(xargs cat)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(mvn -version)"
+    ]
+  }
+}
