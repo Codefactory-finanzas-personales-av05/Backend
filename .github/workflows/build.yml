@@ -59,26 +59,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn -B clean verify sonar:sonar -Pcoverage \
+          mvn -B verify sonar:sonar \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
             -Dsonar.organization=${{ vars.SONAR_ORG }} \
-<<<<<<< HEAD
             -Dsonar.token=${{ secrets.SONAR_TOKEN }}
-=======
-            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
-            -Dsonar.branch.name=main \
-            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
-            -Dsonar.exclusions=**/FinanceAuthApplication.java
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          JWT_SECRET: "ClaveCI"
-          N8N_WEBHOOK_VERIFICACION: "http://localhost/test"
-          N8N_WEBHOOK_BIENVENIDA: "http://localhost/test"
-          FRONTEND_URL: "http://localhost:3000"
-          CORS_ORIGINS: "http://localhost:3000"
->>>>>>> origin/main
 
   # -------------------------
   # 3. BUILD & PUSH DOCKER
