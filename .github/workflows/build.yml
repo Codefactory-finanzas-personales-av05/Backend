@@ -65,9 +65,9 @@ jobs:
             -Dsonar.organization=${{ vars.SONAR_ORG }} \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
-  # -------------------------
+  # ------------------------
   # 3. BUILD & PUSH DOCKER
-  # -------------------------
+  # ------------------------
   build:
     name: Build & Push Docker Image
     needs: sonar
