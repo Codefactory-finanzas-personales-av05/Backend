@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * de este modelo. No necesita Spring ni base de datos.
  */
 @DisplayName("Pruebas del modelo CodigoVerificacion")
-class PruebasCodigoVerificacion {
+class CodigoVerificacionTest {
 
     @Test
     @DisplayName("Codigo no usado y no expirado debe estar vigente")

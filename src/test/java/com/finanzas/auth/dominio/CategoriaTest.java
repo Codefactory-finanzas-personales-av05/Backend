@@ -6,7 +6,7 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Pruebas unitarias del modelo Categoria")
-class PruebasCategoria {
+class CategoriaTest {
 
     @Test
     @DisplayName("Categoria de ingreso tiene tipo INGRESO")

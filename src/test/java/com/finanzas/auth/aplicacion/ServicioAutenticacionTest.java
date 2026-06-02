@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Pruebas unitarias del ServicioAutenticacion")
-class PruebasServicioAutenticacion {
+class ServicioAutenticacionTest {
 
     @Mock private PuertoRepositorioUsuario repositorioUsuario;
     @Mock private PuertoRepositorioCodigo repositorioCodigo;

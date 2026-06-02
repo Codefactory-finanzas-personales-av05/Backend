@@ -31,7 +31,11 @@ public class ConfiguracionSeguridad {
         "/api/auth/login",
         "/api/auth/reenviar-codigo",
         "/h2-console/**",
-        "/actuator/health"
+        "/actuator/health",
+
+        "/v3/api-docs/**",
+        "/swagger-ui/**",
+        "/swagger-ui.html"
     };
 
     @Bean
@@ -42,7 +46,6 @@ public class ConfiguracionSeguridad {
                 sesion.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(ENDPOINTS_PUBLICOS).permitAll()
-                // /api/auth/descripcion y todo /api/transacciones/** requieren JWT
                 .anyRequest().authenticated()
             )
             .addFilterBefore(filtroJwt, UsernamePasswordAuthenticationFilter.class)

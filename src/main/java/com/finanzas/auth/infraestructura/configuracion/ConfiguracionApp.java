@@ -41,6 +41,15 @@ public class ConfiguracionApp {
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
+
+                // Swagger UI
+                registro.addMapping("/swagger-ui/**")
+                        .allowedOrigins(origenes)
+                        .allowedMethods("GET");
+
+                registro.addMapping("/v3/api-docs/**")
+                        .allowedOrigins(origenes)
+                        .allowedMethods("GET");
             }
         };
     }

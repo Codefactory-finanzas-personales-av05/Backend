@@ -1,56 +1,56 @@
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/aplicacion/casosdeuso/ServicioTransaccion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/dominio/modelo/CodigoVerificacion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/seguridad/ConfiguracionSeguridad.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/repositorio/RepositorioJpaCodigo.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/aplicacion/dto/respuesta/RespuestaHistorial.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/aplicacion/dto/peticion/PeticionVerificacion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/dominio/puertos/salida/PuertoRepositorioCodigo.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/entidad/EntidadCliente.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/dominio/modelo/Cliente.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/dominio/puertos/salida/PuertoRepositorioUsuario.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/correo/AdaptadorCorreo.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/repositorio/RepositorioJpaTransaccion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/adaptador/ConvertidorUsuario.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/entidad/EntidadCategoria.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/adaptador/AdaptadorTransaccion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/dominio/modelo/Usuario.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/dominio/modelo/Transaccion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/adaptador/AdaptadorUsuario.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/repositorio/RepositorioJpaCliente.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/aplicacion/casosdeuso/ServicioAutenticacion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/dominio/puertos/salida/PuertoRepositorioTransaccion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/aplicacion/dto/respuesta/RespuestaCategoria.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/aplicacion/dto/respuesta/RespuestaTransaccion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/web/ControladorTransaccion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/aplicacion/dto/respuesta/RespuestaRegistro.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/compartido/utilidad/GeneradorCodigo.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/entidad/EntidadTransaccion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/compartido/utilidad/UtilJwt.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/seguridad/FiltroJwt.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/dominio/puertos/salida/PuertoCorreo.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/aplicacion/dto/respuesta/RespuestaApi.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/aplicacion/dto/respuesta/RespuestaLogin.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/web/ControladorAutenticacion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/dominio/puertos/entrada/CasoDeUsoAutenticacion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/dominio/puertos/entrada/CasoDeUsoTransaccion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/configuracion/ConfiguracionApp.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/dominio/puertos/salida/PuertoRepositorioCategoria.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/compartido/excepcion/ExcepcionAutenticacion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/adaptador/AdaptadorCliente.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/aplicacion/dto/respuesta/RespuestaItemHistorial.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/adaptador/AdaptadorCategoria.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/aplicacion/dto/peticion/PeticionLogin.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/aplicacion/dto/peticion/PeticionDescripcion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/repositorio/RepositorioJpaUsuario.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/FinanceAuthApplication.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/dominio/modelo/Categoria.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/aplicacion/dto/peticion/PeticionTransaccion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/aplicacion/dto/respuesta/RespuestaCliente.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/compartido/excepcion/ManejadorExcepciones.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/aplicacion/dto/peticion/PeticionRegistro.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/entidad/EntidadUsuario.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/adaptador/ConvertidorCodigo.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/repositorio/RepositorioJpaCategoria.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/entidad/EntidadCodigoVerificacion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/dominio/puertos/salida/PuertoRepositorioCliente.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/main/java/com/finanzas/auth/infraestructura/persistencia/adaptador/AdaptadorCodigo.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\adaptador\AdaptadorUsuario.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\dominio\modelo\Categoria.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\entidad\EntidadUsuario.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\aplicacion\dto\peticion\PeticionRegistro.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\dominio\modelo\Transaccion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\configuracion\ConfiguracionApp.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\entidad\EntidadCliente.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\aplicacion\casosdeuso\ServicioTransaccion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\adaptador\AdaptadorCliente.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\repositorio\RepositorioJpaTransaccion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\seguridad\ConfiguracionSeguridad.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\web\ControladorAutenticacion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\correo\AdaptadorCorreo.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\compartido\utilidad\UtilJwt.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\dominio\modelo\CodigoVerificacion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\dominio\puertos\salida\PuertoRepositorioCliente.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\aplicacion\dto\peticion\PeticionTransaccion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\FinanceAuthApplication.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\dominio\puertos\salida\PuertoRepositorioCategoria.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\dominio\puertos\salida\PuertoCorreo.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\adaptador\AdaptadorCodigo.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\entidad\EntidadTransaccion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\adaptador\ConvertidorCodigo.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\aplicacion\dto\respuesta\RespuestaRegistro.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\adaptador\AdaptadorTransaccion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\aplicacion\dto\respuesta\RespuestaApi.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\aplicacion\dto\respuesta\RespuestaLogin.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\compartido\utilidad\GeneradorCodigo.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\dominio\puertos\salida\PuertoRepositorioTransaccion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\aplicacion\casosdeuso\ServicioAutenticacion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\aplicacion\dto\respuesta\RespuestaCliente.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\aplicacion\dto\respuesta\RespuestaTransaccion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\entidad\EntidadCategoria.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\aplicacion\dto\respuesta\RespuestaCategoria.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\entidad\EntidadCodigoVerificacion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\compartido\excepcion\ExcepcionAutenticacion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\repositorio\RepositorioJpaUsuario.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\compartido\excepcion\ManejadorExcepciones.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\repositorio\RepositorioJpaCategoria.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\seguridad\FiltroJwt.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\web\ControladorTransaccion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\aplicacion\dto\peticion\PeticionDescripcion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\adaptador\ConvertidorUsuario.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\dominio\puertos\salida\PuertoRepositorioCodigo.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\dominio\modelo\Usuario.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\repositorio\RepositorioJpaCodigo.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\aplicacion\dto\peticion\PeticionVerificacion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\dominio\puertos\salida\PuertoRepositorioUsuario.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\dominio\puertos\entrada\CasoDeUsoAutenticacion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\dominio\modelo\Cliente.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\aplicacion\dto\respuesta\RespuestaItemHistorial.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\repositorio\RepositorioJpaCliente.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\dominio\puertos\entrada\CasoDeUsoTransaccion.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\aplicacion\dto\peticion\PeticionLogin.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\infraestructura\persistencia\adaptador\AdaptadorCategoria.java
+C:\Users\rolle\Desktop\Backend\src\main\java\com\finanzas\auth\aplicacion\dto\respuesta\RespuestaHistorial.java

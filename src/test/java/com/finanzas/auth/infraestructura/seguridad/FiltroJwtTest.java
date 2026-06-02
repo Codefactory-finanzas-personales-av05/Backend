@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Pruebas unitarias del FiltroJwt")
-class PruebasFiltroJwt {
+class FiltroJwtTest {
 
     @Mock private UtilJwt utilJwt;
     @Mock private HttpServletRequest request;

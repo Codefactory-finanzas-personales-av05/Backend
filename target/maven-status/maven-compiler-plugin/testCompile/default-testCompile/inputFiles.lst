@@ -1,9 +1,13 @@
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/compartido/PruebasUtilJwt.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/compartido/PruebasGeneradorCodigo.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/dominio/PruebasCategoria.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/aplicacion/PruebasServicioTransaccion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/PruebasAutenticacion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/infraestructura/seguridad/PruebasFiltroJwt.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/dominio/PruebasTransaccion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/dominio/PruebasCodigoVerificacion.java
-/home/xion1407/Proyectos UdeA/Fabrica escuela 2026-1/gestion financiera/src/test/java/com/finanzas/auth/aplicacion/PruebasServicioAutenticacion.java
+C:\Users\rolle\Desktop\Backend\src\test\java\com\finanzas\auth\infraestructura\seguridad\FiltroJwtTest.java
+C:\Users\rolle\Desktop\Backend\src\test\java\com\finanzas\auth\AutenticacionTest.java
+C:\Users\rolle\Desktop\Backend\src\test\java\com\finanzas\auth\dominio\UsuarioTest.java
+C:\Users\rolle\Desktop\Backend\src\test\java\com\finanzas\auth\aplicacion\ServicioTransaccionTest.java
+C:\Users\rolle\Desktop\Backend\src\test\java\com\finanzas\auth\aplicacion\ServicioAutenticacionTest.java
+C:\Users\rolle\Desktop\Backend\src\test\java\com\finanzas\auth\compartido\GeneradorCodigoTest.java
+C:\Users\rolle\Desktop\Backend\src\test\java\com\finanzas\auth\infraestructura\web\ControladorAutenticacionTest.java
+C:\Users\rolle\Desktop\Backend\src\test\java\com\finanzas\auth\dominio\CategoriaTest.java
+C:\Users\rolle\Desktop\Backend\src\test\java\com\finanzas\auth\compartido\excepcion\ManejadorExcepcionesTest.java
+C:\Users\rolle\Desktop\Backend\src\test\java\com\finanzas\auth\compartido\UtilJwtTest.java
+C:\Users\rolle\Desktop\Backend\src\test\java\com\finanzas\auth\dominio\TransaccionTest.java
+C:\Users\rolle\Desktop\Backend\src\test\java\com\finanzas\auth\infraestructura\web\ControladorTransaccionTest.java
+C:\Users\rolle\Desktop\Backend\src\test\java\com\finanzas\auth\dominio\CodigoVerificacionTest.java

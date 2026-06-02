@@ -20,6 +20,35 @@
     <properties>
         <java.version>17</java.version>
         <jjwt.version>0.11.5</jjwt.version>
+        <lombok.version>1.18.38</lombok.version>
+        <sonar.organization>codefactory-finanzas-personales-av05</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.projectKey>Codefactory-finanzas-personales-av05_Backend</sonar.projectKey>
+        <sonar.coverage.jacoco.xmlReportPaths>
+            target/site/jacoco/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.exclusions>
+            **/infraestructura/persistencia/entidad/**,
+            **/infraestructura/persistencia/repositorio/**,
+            **/infraestructura/persistencia/adaptador/**,
+            **/infraestructura/correo/**,
+            **/infraestructura/configuracion/**,
+            **/aplicacion/dto/**,
+            **/FinanceAuthApplication.java
+        </sonar.exclusions>
+        <sonar.coverage.exclusions>
+            **/infraestructura/persistencia/entidad/**,
+            **/infraestructura/persistencia/repositorio/**,
+            **/infraestructura/persistencia/adaptador/**,
+            **/infraestructura/correo/**,
+            **/infraestructura/configuracion/**,
+            **/aplicacion/dto/**,
+            **/FinanceAuthApplication.java
+            **/aplicacion/*Test.java,
+            **/compartido/*Test.java,
+            **/dominio/*Test.java,
+            **/infraestructura/**/*Test.java
+        </sonar.coverage.exclusions>
     </properties>
 
     <dependencies>
@@ -52,6 +81,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <!-- Swagger para documentación de Endpoints-->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.5.0</version>
         </dependency>
 
         <!-- H2 - base de datos en memoria para desarrollo local y pruebas -->
@@ -109,34 +145,48 @@
     </dependencies>
 
     <build>
-
-        
         <plugins>
-            
+
+            <!-- Compiler con annotationProcessorPaths para que Lombok funcione -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <!-- Flag experimental para que Byte Buddy soporte Java 25 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
                 <configuration>
+                    <argLine>-Dnet.bytebuddy.experimental=true ${argLine}</argLine>
                     <includes>
-                        <include>**/Pruebas*.java</include>
+                        <include>**/*Test.java</include>
                     </includes>
                 </configuration>
             </plugin>
-            
-            
-            
+
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.11</version>
                 <executions>
                     <execution>
+                        <id>prepare-agent</id>
                         <goals><goal>prepare-agent</goal></goals>
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>test</phase>
+                        <phase>verify</phase>
                         <goals><goal>report</goal></goals>
                     </execution>
                 </executions>
@@ -154,7 +204,38 @@
                     </excludes>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.8.11</version>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals><goal>prepare-agent</goal></goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <goals><goal>report</goal></goals>
+                                <configuration>
+                                    <formats>
+                                        <format>XML</format>
+                                    </formats>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
