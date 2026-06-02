@@ -95,7 +95,7 @@ jobs:
       - name: Build & Push Docker Image
         uses: mr-smithers-excellent/docker-build-push@v6
         with:
-          image: TU_USUARIO_DOCKER/codefactory-finanzas
+          image: apabon03/codefactory-finanzas
           tags: latest
           registry: docker.io
           dockerfile: Dockerfile
@@ -120,10 +120,10 @@ jobs:
           script: |
             docker stop codefactory-finanzas || true
             docker rm codefactory-finanzas || true
-            docker pull TU_USUARIO_DOCKER/codefactory-finanzas:latest
+            docker pull apabon03/codefactory-finanzas:latest
             docker run -d \
               --name codefactory-finanzas \
               -p 8080:8080 \
               --restart always \
-              TU_USUARIO_DOCKER/codefactory-finanzas:latest
+              apabon03/codefactory-finanzas:latest
             docker ps
