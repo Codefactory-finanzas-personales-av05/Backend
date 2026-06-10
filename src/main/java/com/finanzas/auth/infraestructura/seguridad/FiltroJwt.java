@@ -39,16 +39,7 @@ public class FiltroJwt extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
-        String ruta = request.getServletPath();
-
-        if (
-                ruta.startsWith("/actuator") ||
-                ruta.startsWith("/swagger-ui") ||
-                ruta.startsWith("/v3/api-docs")
-        ) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        
 
         String authHeader = request.getHeader("Authorization");
 
